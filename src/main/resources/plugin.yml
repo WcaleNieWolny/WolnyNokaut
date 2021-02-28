@@ -1,0 +1,16 @@
+name: TobiaszNokaut
+version: ${project.version}
+main: pl.wolny.junglenokaut.JungleNokaut
+api-version: 1.16
+commands:
+  akceptujsmierc:
+    description: Akceptuje śmierć.
+    aliases:
+      - zginodrazu
+      - harakiri
+  podniesgracza:
+    description: Podnosi gracza.
+  rzucgracza:
+    aliases:
+      - zrzucgracza
+    description: Rzuca gracza.
