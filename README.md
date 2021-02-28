@@ -1,4 +1,4 @@
-# JungleTablist
+# TobiaszNokaut
 
 Nokaut inspirowany przez [TheMolkaPl](https://github.com/TheMolkaPL) z [kmpack](https://kwadratowa.tv/kmpack)
 
