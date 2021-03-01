@@ -1,6 +1,7 @@
 package pl.wolny.junglenokaut.utilities;
 
 import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_16_R3.*;
 import org.bukkit.*;
 import org.bukkit.World;
@@ -15,9 +16,11 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import pl.wolny.junglenokaut.JungleNokaut;
+import sun.security.util.KnownOIDs;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,6 +30,17 @@ public class GenerateFakePlayer{
     private Thread worker;
     public void gen(Player knocked, Player reciver, Location l){
         GameProfile gameProfile = new GameProfile(knocked.getUniqueId(), knocked.getName());
+        GameProfile playerProfile = ((CraftPlayer) knocked).getHandle().getProfile();
+        Collection<Property> textures = playerProfile.getProperties().get("textures");
+        if(playerProfile.getProperties().get("textures").size() != 0){
+            String signature = null;
+            String value = null;
+            for (Property property: textures) {
+                signature = property.getSignature();
+                value = property.getValue();
+            }
+            gameProfile.getProperties().put("textures", new Property(value, signature));
+        }
         EntityPlayer entityPlayer = new EntityPlayer(
                 ((CraftServer) Bukkit.getServer()).getServer(),
                 ((CraftWorld) knocked.getWorld()).getHandle(),

@@ -51,7 +51,7 @@ public class PodniesGracza implements CommandExecutor {
                 players.add((Player) entity);
             }
         }
-        players.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0);
+        players.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1);
         if(players.contains(executor)){
             players.remove(executor);
         }

@@ -38,10 +38,6 @@ public class RzucGracza implements CommandExecutor {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cBrak graczy których można upuścić!"));
             return false;
         }
-        if(toDropEnt.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNie możesz podnieść tego gracza!"));
-            return false;
-        }
         Player toDrop = (Player) toDropEnt;
         executor.removePotionEffect(PotionEffectType.SLOW);
         PersistentDataContainer data = toDrop.getPersistentDataContainer();
