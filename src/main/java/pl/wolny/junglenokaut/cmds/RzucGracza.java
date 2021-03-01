@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.wolny.junglenokaut.JungleNokaut;
 import pl.wolny.junglenokaut.utilities.ShowPlayer;
@@ -38,6 +39,7 @@ public class RzucGracza implements CommandExecutor {
             return false;
         }
         Player toDrop = (Player) toDropEnt;
+        executor.removePotionEffect(PotionEffectType.SLOW);
         PersistentDataContainer data = toDrop.getPersistentDataContainer();
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 10);
         executor.removePassenger(executor.getPassengers().get(0));
