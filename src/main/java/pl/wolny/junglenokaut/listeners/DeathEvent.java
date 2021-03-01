@@ -25,6 +25,14 @@ public class DeathEvent implements Listener {
     public void event(PlayerDeathEvent event){
         Player p = event.getEntity();
         PersistentDataContainer data = event.getEntity().getPersistentDataContainer();
+        if(p.getPassengers().size() == 0){return;}
+        if(!(p.getPassengers().get(0) instanceof Player)){return;}
+        Player toDrop = (Player) p.getPassengers().get(0);
+        PersistentDataContainer dataContainer = toDrop.getPersistentDataContainer();
+        if(dataContainer.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 3){
+            DropPlayer.drop(toDrop, p);
+            return;
+        }
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
             p.setGameMode(GameMode.SURVIVAL);
             p.setWalkSpeed(0.2f);
