@@ -19,6 +19,7 @@ public class QuitEvent implements Listener {
     public void event(PlayerQuitEvent event){
         Player p = event.getPlayer();
         PersistentDataContainer data = p.getPersistentDataContainer();
+        p.removePotionEffect(PotionEffectType.SLOW);
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
             p.setGameMode(GameMode.SURVIVAL);
             p.setWalkSpeed(0.2f);
@@ -37,6 +38,7 @@ public class QuitEvent implements Listener {
             return;
         }
         Player p = event.getPlayer();
+        p.removePotionEffect(PotionEffectType.SLOW);
         PersistentDataContainer data = p.getPersistentDataContainer();
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
             p.setGameMode(GameMode.SURVIVAL);
