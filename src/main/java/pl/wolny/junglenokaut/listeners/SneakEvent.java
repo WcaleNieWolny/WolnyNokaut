@@ -32,14 +32,14 @@ public class SneakEvent implements Listener {
                 players.add((Player) entity);
             }
         }
-        players.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0);
+        players.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1);
         if(players.contains(player)){
             players.remove(player);
         }
         if(players.size() != 1){return;}
         int i = Integer.parseInt(JungleNokaut.getMain().getConfig().getString("HealXP"));
         if((float) i > player.getTotalExperience()){
-            System.out.println("no lvl");return;
+            return;
         }
         event.getPlayer().setWalkSpeed(0f);
         PersistentDataContainer data = players.get(0).getPersistentDataContainer();
