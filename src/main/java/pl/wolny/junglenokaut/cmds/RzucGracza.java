@@ -29,13 +29,17 @@ public class RzucGracza implements CommandExecutor {
             return false;
         }
         Player executor = (Player) sender;
+        if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("DisableCMD")));
+            return false;
+        }
         if(executor.getPassengers().size() != 1){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cBrak graczy których można upuścić!"));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("NoPlayerToDrop")));
             return false;
         }
         Entity toDropEnt = executor.getPassengers().get(0);
         if(!(toDropEnt instanceof  Player)){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cBrak graczy których można upuścić!"));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("NoPlayerToDrop")));
             return false;
         }
         Player toDrop = (Player) toDropEnt;
@@ -53,6 +57,8 @@ public class RzucGracza implements CommandExecutor {
         toDrop.teleport(executor.getLocation());
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 4);
         int[] TitleStatus = {data.get(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER)};
+        String KnockedLine1 = JungleNokaut.getMain().getConfig().getString("KnockedLine1");
+        String KnockedLine2 = JungleNokaut.getMain().getConfig().getString("KnockedLine2");
         new BukkitRunnable()
         {
             public void run()
@@ -72,7 +78,7 @@ public class RzucGracza implements CommandExecutor {
                     this.cancel();
                     return;
                 }
-                toDrop.sendTitle(ChatColor.translateAlternateColorCodes('&', "&a&lJesteś powalony!"), ChatColor.translateAlternateColorCodes('&', "&cPozostało: " + TitleStatus[0]), 0, 20, 0);
+                toDrop.sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME%", String.valueOf(TitleStatus[0]))), 0, 20, 0);
                 TitleStatus[0]--;
 
             }

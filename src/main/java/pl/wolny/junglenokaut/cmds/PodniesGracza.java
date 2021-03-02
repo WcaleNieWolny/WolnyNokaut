@@ -36,6 +36,10 @@ public class PodniesGracza implements CommandExecutor {
             return false;
         }
         Player executor = (Player) sender;
+        if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("DisableCMD")));
+            return false;
+        }
         if(executor.getPassengers().size() != 0){
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNie możesz tego zrobić!"));
         }

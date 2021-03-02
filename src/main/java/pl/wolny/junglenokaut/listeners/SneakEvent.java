@@ -56,6 +56,8 @@ public class SneakEvent implements Listener {
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 1);
                     event.getPlayer().setWalkSpeed(0.2f);
                     final int[] TitleStatus = {data.get(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER)};
+                    String KnockedLine1 = JungleNokaut.getMain().getConfig().getString("KnockedLine1");
+                    String KnockedLine2 = JungleNokaut.getMain().getConfig().getString("KnockedLine2");
                     new BukkitRunnable()
                     {
                         public void run()
@@ -75,7 +77,7 @@ public class SneakEvent implements Listener {
                                 this.cancel();
                                 return;
                             }
-                            players.get(0).sendTitle(ChatColor.translateAlternateColorCodes('&', "&a&lJesteś powalony!"), ChatColor.translateAlternateColorCodes('&', "&cPozostało: " + TitleStatus[0]), 0, 20, 0);
+                            players.get(0).sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME%", String.valueOf(TitleStatus[0]))), 0, 20, 0);
                             TitleStatus[0]--;
 
                         }

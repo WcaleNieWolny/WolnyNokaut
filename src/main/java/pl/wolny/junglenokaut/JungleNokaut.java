@@ -39,6 +39,11 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         getConfig().addDefault("NocCooldown", 60);
         getConfig().addDefault("HealCooldown", 10);
         getConfig().addDefault("HealXP", 7);
+        getConfig().addDefault("PickupModule", true);
+        getConfig().addDefault("DisableCMD", "&cTa komenda jest wyłączona!");
+        getConfig().addDefault("NoPlayerToDrop", "&cBrak graczy których można upuścić!");
+        getConfig().addDefault("KnockedLine1", "&a&lJesteś powalony!");
+        getConfig().addDefault("KnockedLine2", "&cPozostało: %TIME%");
         getConfig().options().copyDefaults(true);
         saveConfig();
         //Bukkit.getPluginManager().registerEvents(this, this);

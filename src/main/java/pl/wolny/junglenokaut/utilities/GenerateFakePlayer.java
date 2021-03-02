@@ -31,16 +31,9 @@ public class GenerateFakePlayer{
     public void gen(Player knocked, Player reciver, Location l){
         GameProfile gameProfile = new GameProfile(knocked.getUniqueId(), knocked.getName());
         GameProfile playerProfile = ((CraftPlayer) knocked).getHandle().getProfile();
-        Collection<Property> textures = playerProfile.getProperties().get("textures");
-        if(playerProfile.getProperties().get("textures").size() != 0){
-            String signature = null;
-            String value = null;
-            for (Property property: textures) {
-                signature = property.getSignature();
-                value = property.getValue();
-            }
-            gameProfile.getProperties().put("textures", new Property(value, signature));
-        }
+        Property property = playerProfile.getProperties().get("textures").iterator().next();
+        reciver.sendMessage(property.getValue() + " " + property.getSignature());
+        gameProfile.getProperties().putAll(((CraftPlayer) knocked).getHandle().getProfile().getProperties());
         EntityPlayer entityPlayer = new EntityPlayer(
                 ((CraftServer) Bukkit.getServer()).getServer(),
                 ((CraftWorld) knocked.getWorld()).getHandle(),
