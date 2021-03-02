@@ -6,6 +6,7 @@ import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -21,18 +22,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class DeathEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerDeathEvent event){
         Player p = event.getEntity();
         PersistentDataContainer data = event.getEntity().getPersistentDataContainer();
-        if(p.getPassengers().size() == 0){return;}
-        if(!(p.getPassengers().get(0) instanceof Player)){return;}
-        Player toDrop = (Player) p.getPassengers().get(0);
-        PersistentDataContainer dataContainer = toDrop.getPersistentDataContainer();
-        if(dataContainer.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 3){
-            DropPlayer.drop(toDrop, p);
-            return;
-        }
+        if(p.getPassengers().size() != 0){return;}
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
             p.setGameMode(GameMode.SURVIVAL);
             p.setWalkSpeed(0.2f);

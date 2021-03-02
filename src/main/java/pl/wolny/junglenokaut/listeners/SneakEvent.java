@@ -7,6 +7,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SneakEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerToggleSneakEvent event){
         Player player = event.getPlayer();
         if(player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){return;}
@@ -38,7 +39,7 @@ public class SneakEvent implements Listener {
         }
         if(players.size() != 1){return;}
         int i = Integer.parseInt(JungleNokaut.getMain().getConfig().getString("HealXP"));
-        if((float) i > player.getTotalExperience()){
+        if(event.getPlayer().getTotalExperience() < i){
             return;
         }
         event.getPlayer().setWalkSpeed(0f);
