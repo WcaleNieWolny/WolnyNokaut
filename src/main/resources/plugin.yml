@@ -2,6 +2,8 @@ name: TobiaszNokaut
 version: ${project.version}
 main: pl.wolny.junglenokaut.JungleNokaut
 api-version: 1.16
+author: WcaleNieWolny
+description: Nokaut pisany na zlecenie.
 commands:
   akceptujsmierc:
     description: Akceptuje śmierć.
@@ -14,3 +16,7 @@ commands:
     aliases:
       - zrzucgracza
     description: Rzuca gracza.
+permissions:
+  tobiasznokaut.updateinfo:
+    description: shows information about the update
+    default: op

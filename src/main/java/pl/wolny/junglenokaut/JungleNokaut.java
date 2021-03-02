@@ -1,34 +1,23 @@
 package pl.wolny.junglenokaut;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.*;
-import org.bukkit.Material;
-import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
-import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
+import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
+import pl.wolny.junglenokaut.cmds.AkceptujSmierc;
+import pl.wolny.junglenokaut.cmds.PodniesGracza;
+import pl.wolny.junglenokaut.cmds.RzucGracza;
 import pl.wolny.junglenokaut.listeners.*;
-import pl.wolny.junglenokaut.cmds.*;
+import pl.wolny.junglenokaut.updater.GetLastestTag;
+import pl.wolny.junglenokaut.updater.*;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public final class JungleNokaut extends JavaPlugin implements Listener {
     public static Plugin plugin;
@@ -38,6 +27,14 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Plugin startup logic
+        if(!(isPaper())){
+            Bukkit.getLogger().info("Nie wykryto spigot'a na serwerze!");
+            Bukkit.getLogger().info("Proszę go zainstalować przed użyciem pluginu");
+            Bukkit.getLogger().info("Pobierzesz go tutaj: https://papermc.io/downloads");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+        System.out.println(GetLastestTag.OpenCon());
         plugin = this;
         getConfig().addDefault("NocCooldown", 60);
         getConfig().addDefault("HealCooldown", 10);
@@ -54,6 +51,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new SneakEvent(), this);
         Bukkit.getPluginManager().registerEvents(new BlockEvent(), this);
         Bukkit.getPluginManager().registerEvents(new DropListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AdminJoinEvent(), this);
         getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
         getCommand("podniesgracza").setExecutor(new PodniesGracza());
         getCommand("rzucgracza").setExecutor(new RzucGracza());
@@ -73,5 +71,14 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
             p.removePotionEffect(PotionEffectType.BLINDNESS);
             p.getPersistentDataContainer().set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
         }
+    }
+    private boolean isPaper(){
+        boolean isPapermc = false;
+        try {
+            isPapermc = Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData") != null;
+        } catch (ClassNotFoundException e) {
+        }
+        return  isPapermc;
+        //Source: https://papermc.io/forums/t/checking-for-server-type-paper-spigot-or-bukkit/981
     }
 }
