@@ -44,11 +44,6 @@ public class SneakEvent implements Listener {
         }
         event.getPlayer().setWalkSpeed(0f);
         PersistentDataContainer data = players.get(0).getPersistentDataContainer();
-        if(player.isSneaking()){
-            event.getPlayer().setWalkSpeed(0.2f);
-            data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 1);
-            return;
-        }
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 2);
         //data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 2);
         final int[] TitleStatus2 = {JungleNokaut.getMain().getConfig().getInt("HealCooldown")};
@@ -57,8 +52,9 @@ public class SneakEvent implements Listener {
         {
             public void run()
             {
-                if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 2){
-                    //data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 1);
+                if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 2|| (!(event.getPlayer().isSneaking()))){
+                    data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 1);
+                    event.getPlayer().setWalkSpeed(0.2f);
                     final int[] TitleStatus = {data.get(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER)};
                     new BukkitRunnable()
                     {
