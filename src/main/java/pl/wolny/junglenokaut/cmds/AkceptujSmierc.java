@@ -22,11 +22,11 @@ public class AkceptujSmierc implements CommandExecutor {
         Player executor = (Player) sender;
         PersistentDataContainer data = executor.getPersistentDataContainer();
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cŻycie jest piekne, dlaczego chcesz popełnić samobójstwo?"));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathNo")));
             return false;
         }
         executor.setHealth(0);
-        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aHara-kiri popełnione. Miłego dnia."));
+        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathYes")));
         return true;
     }
 }

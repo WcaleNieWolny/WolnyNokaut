@@ -48,6 +48,9 @@ public class SneakEvent implements Listener {
         //data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 2);
         final int[] TitleStatus2 = {JungleNokaut.getMain().getConfig().getInt("HealCooldown")};
         final int[] TitleStatus3 = {1};
+        String ResuscitationForDeadLine1 = JungleNokaut.getMain().getConfig().getString("ResuscitationForDeadLine1");
+        String ResuscitationForDeadLine2 = JungleNokaut.getMain().getConfig().getString("ResuscitationForDeadLine2");
+        String ResuscitationForHeal = JungleNokaut.getMain().getConfig().getString("ResuscitationForHeal");
         new BukkitRunnable()
         {
             public void run()
@@ -77,7 +80,7 @@ public class SneakEvent implements Listener {
                                 this.cancel();
                                 return;
                             }
-                            players.get(0).sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME%", String.valueOf(TitleStatus[0]))), 0, 20, 0);
+                            players.get(0).sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME-1%", String.valueOf(TimeSystem.getMinute(TitleStatus[0])))).replace("%TIME-2%", TimeSystem.getSecond(TimeSystem.getMinute(TitleStatus[0]), TitleStatus[0])), 0, 20, 0);
                             TitleStatus[0]--;
 
                         }
@@ -102,7 +105,7 @@ public class SneakEvent implements Listener {
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 1);
                 }
                 players.get(0).getPersistentDataContainer().set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 2);
-                players.get(0).sendTitle(ChatColor.translateAlternateColorCodes('&', "&a&lReanimowanie!"), ChatColor.translateAlternateColorCodes('&', "&cPozostało: " + TitleStatus2[0]), 0, 20, 0);
+                players.get(0).sendTitle(ChatColor.translateAlternateColorCodes('&', ResuscitationForDeadLine1), ChatColor.translateAlternateColorCodes('&', ResuscitationForDeadLine2.replace("%TIME%", String.valueOf(TitleStatus2[0]))), 0, 20, 0);
                 TitleStatus2[0]--;
             }
         }.runTaskTimer(JungleNokaut.getMain(), 20, 20);
@@ -123,35 +126,35 @@ public class SneakEvent implements Listener {
                 if(TitleStatus3[0] == 9){TitleStatus3[0] = 1;}
                 switch (TitleStatus3[0]){
                     case 1:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c|"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c|"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + "."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 2:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c/"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie.."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c/"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + ".."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 3:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c-"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie..."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c-"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + "..."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 4:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c\\"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c\\"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + "."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 5:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c|"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie.."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c|"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + ".."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 6:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c/"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie..."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c/"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + "..."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 7:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c-"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c-"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + "."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                     case 8:
-                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c\\"), ChatColor.translateAlternateColorCodes('&', "&aReanimowanie.."), 0, 6, 0);
+                        event.getPlayer().sendTitle(ChatColor.translateAlternateColorCodes('&', "&c\\"), ChatColor.translateAlternateColorCodes('&', ResuscitationForHeal + ".."), 0, 6, 0);
                         TitleStatus3[0]++;
                         break;
                 }

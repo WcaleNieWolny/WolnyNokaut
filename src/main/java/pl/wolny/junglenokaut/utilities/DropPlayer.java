@@ -27,6 +27,8 @@ public class DropPlayer {
         //toDrop.teleport(toDrop.getLocation().subtract(0, 1, 0));
         toDrop.teleport(root.getLocation());
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 4);
+        String KnockedLine1 = JungleNokaut.getMain().getConfig().getString("KnockedLine1");
+        String KnockedLine2 = JungleNokaut.getMain().getConfig().getString("KnockedLine2");
         int[] TitleStatus = {data.get(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER)};
         new BukkitRunnable()
         {
@@ -47,7 +49,7 @@ public class DropPlayer {
                     this.cancel();
                     return;
                 }
-                toDrop.sendTitle(ChatColor.translateAlternateColorCodes('&', "&a&lJesteś powalony!"), ChatColor.translateAlternateColorCodes('&', "&cPozostało: " + TitleStatus[0]), 0, 20, 0);
+                toDrop.sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME-1%", String.valueOf(TimeSystem.getMinute(TitleStatus[0])))).replace("%TIME-2%", TimeSystem.getSecond(TimeSystem.getMinute(TitleStatus[0]), TitleStatus[0])), 0, 20, 0);
                 TitleStatus[0]--;
 
             }

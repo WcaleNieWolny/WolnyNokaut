@@ -15,6 +15,7 @@ import pl.wolny.junglenokaut.cmds.RzucGracza;
 import pl.wolny.junglenokaut.listeners.*;
 import pl.wolny.junglenokaut.updater.GetLastestTag;
 import pl.wolny.junglenokaut.updater.*;
+import pl.wolny.junglenokaut.utilities.Metrics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,6 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-        System.out.println(GetLastestTag.OpenCon());
         plugin = this;
         getConfig().addDefault("NocCooldown", 60);
         getConfig().addDefault("HealCooldown", 10);
@@ -44,8 +44,19 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         getConfig().addDefault("NoPlayerToDrop", "&cBrak graczy których można upuścić!");
         getConfig().addDefault("KnockedLine1", "&a&lJesteś powalony!");
         getConfig().addDefault("KnockedLine2", "&cPozostało: %TIME%");
+        getConfig().addDefault("ResuscitationForDeadLine1", "&a&lReanimowanie!");
+        getConfig().addDefault("ResuscitationForDeadLine2", "&cPozostało: %TIME%");
+        getConfig().addDefault("ResuscitationForHeal", "&aReanimowanie");
+        getConfig().addDefault("AcceptDeathNo", "&cŻycie jest piekne, dlaczego chcesz popełnić samobójstwo?");
+        getConfig().addDefault("AcceptDeathYes", "&aHara-kiri popełnione. Miłego dnia.");
+        getConfig().addDefault("CanNotDoThat", "&cNie możesz tego zrobić!");
+        getConfig().addDefault("CanNotPickupYourSelf", "&cNie możesz podnieść samego siebie!");
+        getConfig().addDefault("PickupSuckess", "&aPodniosłeś %USER%.");
+        getConfig().addDefault("PickupForUser", "&aJesteś podniesiony.");
+        getConfig().addDefault("SuckessDrop", "&aUpuściłeś %USER%.");
         getConfig().options().copyDefaults(true);
         saveConfig();
+        Metrics metrics = new Metrics(this, 10544);
         //Bukkit.getPluginManager().registerEvents(this, this);
         Bukkit.getPluginManager().registerEvents(new JoinEvent(), this);
         Bukkit.getPluginManager().registerEvents(new DeathEvent(), this);

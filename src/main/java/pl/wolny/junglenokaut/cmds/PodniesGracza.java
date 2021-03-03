@@ -41,12 +41,12 @@ public class PodniesGracza implements CommandExecutor {
             return false;
         }
         if(executor.getPassengers().size() != 0){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNie możesz tego zrobić!"));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotDoThat")));
         }
         //PersistentDataContainer ExecutorData = executor.getPersistentDataContainer();
         List<Entity> nearbyEntites = (List<Entity>) executor.getWorld().getNearbyEntities(executor.getLocation(), 1, 3, 1);
         if(nearbyEntites.size() == 0){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNie możesz podnieść samego siebie!"));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotPickupYourSelf")));
             return false;
         }
         List<Player> players = new ArrayList<>();
@@ -60,19 +60,20 @@ public class PodniesGracza implements CommandExecutor {
             players.remove(executor);
         }
         if(players.size() != 1){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cNie możesz podnieść samego siebie!"));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotPickupYourSelf")));
             return false;
         }
         Player knocked = players.get(0);
         PersistentDataContainer KnockedData = knocked.getPersistentDataContainer();
         KnockedData.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 3);
-        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aPodniosłeś " + knocked.getName() + "."));
+        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("PickupSuckess").replace("%USER%", players.get(0).getName())));
         executor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0));
         EntityPlayer KnockedEntity = ((CraftPlayer) knocked).getHandle();
         knocked.setGameMode(GameMode.SPECTATOR);
         knocked.setSpectatorTarget(executor);
         KnockedEntity.playerInteractManager.setGameMode(EnumGamemode.ADVENTURE);
         //sendGameState(knocked, executor);
+        String PickupForUser = JungleNokaut.getMain().getConfig().getString("PickupForUser");
         new BukkitRunnable()
         {
             public void run()
@@ -81,7 +82,7 @@ public class PodniesGracza implements CommandExecutor {
                     this.cancel();
                     return;
                 }
-                knocked.sendTitle(ChatColor.translateAlternateColorCodes('&', "&aJesteś podniesiony."), "", 0, 11, 0);
+                knocked.sendTitle(ChatColor.translateAlternateColorCodes('&', PickupForUser), "", 0, 11, 0);
             }
         }.runTaskTimer(JungleNokaut.getMain(), 10, 10);
 //        new BukkitRunnable()

@@ -19,21 +19,14 @@ import pl.wolny.junglenokaut.JungleNokaut;
 import sun.security.util.KnownOIDs;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GenerateFakePlayer{
     private final AtomicBoolean running = new AtomicBoolean(false);
     private Thread worker;
     public void gen(Player knocked, Player reciver, Location l){
-        GameProfile gameProfile = new GameProfile(knocked.getUniqueId(), knocked.getName());
-        GameProfile playerProfile = ((CraftPlayer) knocked).getHandle().getProfile();
-        Property property = playerProfile.getProperties().get("textures").iterator().next();
-        reciver.sendMessage(property.getValue() + " " + property.getSignature());
-        gameProfile.getProperties().putAll(((CraftPlayer) knocked).getHandle().getProfile().getProperties());
+        GameProfile gameProfile = new GameProfile(UUID.randomUUID(), knocked.getName());
         EntityPlayer entityPlayer = new EntityPlayer(
                 ((CraftServer) Bukkit.getServer()).getServer(),
                 ((CraftWorld) knocked.getWorld()).getHandle(),
@@ -42,8 +35,9 @@ public class GenerateFakePlayer{
         entityPlayer.setPosition(knocked.getLocation().getX(), knocked.getLocation().getY()-0.1, knocked.getLocation().getZ());
         entityPlayer.setPose(EntityPose.SWIMMING);
         PlayerConnection connection = ((CraftPlayer)reciver.getPlayer()).getHandle().playerConnection;
-        connection.sendPacket(new PacketPlayOutNamedEntitySpawn(entityPlayer));
         connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer));
+        gameProfile.getProperties().putAll(((CraftPlayer) knocked).getHandle().getProfile().getProperties());
+        connection.sendPacket(new PacketPlayOutNamedEntitySpawn(entityPlayer));
         DataWatcher watcher = entityPlayer.getDataWatcher();
         connection.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), watcher, false));
         PersistentDataContainer data = knocked.getPersistentDataContainer();
@@ -55,7 +49,7 @@ public class GenerateFakePlayer{
                     this.cancel();
                 }
                 if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 4){
-                    System.out.println("NOK_TEST + @2");
+                    //System.out.println("NOK_TEST + @2");
                     entityPlayer.setLocation(knocked.getLocation().getX(), knocked.getLocation().getY()-0.1, knocked.getLocation().getZ(), (knocked.getLocation().getYaw() * 256 / 360), (knocked.getLocation().getPitch() * 256 / 360));
                     entityPlayer.yaw = knocked.getLocation().getYaw() * 256 / 360;
                     entityPlayer.pitch = knocked.getLocation().getPitch() * 256 / 360;
@@ -106,12 +100,13 @@ public class GenerateFakePlayer{
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
                     this.cancel();
                     connection.sendPacket(new PacketPlayOutEntityDestroy(entityPlayer.getId()));
+                    connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer));
                     //connection.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer));
                     return;
                 }
             }
         }.runTaskTimerAsynchronously(JungleNokaut.getMain(), 20, 20);
-        System.out.println(knocked.getName() + " " + reciver.getName());
+        //System.out.println(knocked.getName() + " " + reciver.getName());
 //        new BukkitRunnable()
 //        {
 //            public void run()

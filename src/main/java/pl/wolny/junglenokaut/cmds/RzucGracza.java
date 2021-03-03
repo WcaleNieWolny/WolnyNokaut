@@ -38,11 +38,12 @@ public class RzucGracza implements CommandExecutor {
             return false;
         }
         Entity toDropEnt = executor.getPassengers().get(0);
-        if(!(toDropEnt instanceof  Player)){
+        if(!(toDropEnt instanceof  Player)) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("NoPlayerToDrop")));
             return false;
         }
         Player toDrop = (Player) toDropEnt;
+        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("SuckessDrop").replace("%USER%", toDrop.getName())));
         executor.removePotionEffect(PotionEffectType.SLOW);
         PersistentDataContainer data = toDrop.getPersistentDataContainer();
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 10);

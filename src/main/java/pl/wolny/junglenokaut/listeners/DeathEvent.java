@@ -70,7 +70,7 @@ public class DeathEvent implements Listener {
                     this.cancel();
                     return;
                 }
-                p.sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME%", String.valueOf(TitleStatus[0]))), 0, 20, 0);
+                p.sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME-1%", String.valueOf(TimeSystem.getMinute(TitleStatus[0])))).replace("%TIME-2%", TimeSystem.getSecond(TimeSystem.getMinute(TitleStatus[0]), TitleStatus[0])), 0, 20, 0);
                 TitleStatus[0]--;
 
             }
