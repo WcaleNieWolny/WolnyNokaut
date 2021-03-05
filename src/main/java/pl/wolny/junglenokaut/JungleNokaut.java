@@ -43,7 +43,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         getConfig().addDefault("DisableCMD", "&cTa komenda jest wyłączona!");
         getConfig().addDefault("NoPlayerToDrop", "&cBrak graczy których można upuścić!");
         getConfig().addDefault("KnockedLine1", "&a&lJesteś powalony!");
-        getConfig().addDefault("KnockedLine2", "&cPozostało: %TIME%");
+        getConfig().addDefault("KnockedLine2", "&cPozostało: %TIME-1%:%TIME-2%");
         getConfig().addDefault("ResuscitationForDeadLine1", "&a&lReanimowanie!");
         getConfig().addDefault("ResuscitationForDeadLine2", "&cPozostało: %TIME%");
         getConfig().addDefault("ResuscitationForHeal", "&aReanimowanie");

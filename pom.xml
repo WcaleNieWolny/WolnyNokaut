@@ -6,7 +6,7 @@
 
     <groupId>pl.wolny</groupId>
     <artifactId>JungleNokaut</artifactId>
-    <version>1.5</version>
+    <version>1.5.1</version>
     <packaging>jar</packaging>
 
     <name>JungleNokaut</name>
@@ -40,7 +40,9 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <createDependencyReducedPom>true</createDependencyReducedPom>
+                            <minimizeJar>true</minimizeJar>
+                            <finalName>TobiaszNokaut</finalName>
                         </configuration>
                     </execution>
                 </executions>
