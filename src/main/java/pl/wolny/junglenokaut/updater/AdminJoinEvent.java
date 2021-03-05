@@ -16,7 +16,9 @@ public class AdminJoinEvent implements Listener {
         if(!(event.getPlayer().hasPermission("tobiasznokaut.updateinfo"))){
             return;
         }
-        if(GetLastestTag.OpenCon().equals(JungleNokaut.getMain().getDescription().getVersion())){
+        String con = GetLastestTag.OpenCon();
+        if (con == null){return;}
+        if(con.equals(JungleNokaut.getMain().getDescription().getVersion())){
             return;
         }
         Player player = event.getPlayer();
