@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffectType;
 import pl.wolny.junglenokaut.JungleNokaut;
 
 public class QuitEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerQuitEvent event){
         Player p = event.getPlayer();
         PersistentDataContainer data = p.getPersistentDataContainer();

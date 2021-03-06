@@ -3,6 +3,7 @@ package pl.wolny.junglenokaut.listeners;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -13,7 +14,7 @@ import pl.wolny.junglenokaut.JungleNokaut;
 import pl.wolny.junglenokaut.utilities.DropPlayer;
 
 public class DropListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerQuitEvent event){
         Player player = event.getPlayer();
         if(player.getPassengers().size() == 0){return;}
@@ -24,7 +25,7 @@ public class DropListener implements Listener {
             DropPlayer.drop(toDrop, player);
         }
     }
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event2(PlayerKickEvent event){
         Player player = event.getPlayer();
         if(player.getPassengers().size() == 0){return;}

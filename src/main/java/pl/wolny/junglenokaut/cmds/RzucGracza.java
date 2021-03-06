@@ -20,6 +20,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.wolny.junglenokaut.JungleNokaut;
 import pl.wolny.junglenokaut.utilities.ShowPlayer;
+import pl.wolny.junglenokaut.utilities.TimeSystem;
 
 public class RzucGracza implements CommandExecutor {
     @Override
@@ -79,7 +80,7 @@ public class RzucGracza implements CommandExecutor {
                     this.cancel();
                     return;
                 }
-                toDrop.sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME%", String.valueOf(TitleStatus[0]))), 0, 20, 0);
+                toDrop.sendTitle(ChatColor.translateAlternateColorCodes('&', KnockedLine1), ChatColor.translateAlternateColorCodes('&', KnockedLine2.replace("%TIME-1%", String.valueOf(TimeSystem.getMinute(TitleStatus[0])))).replace("%TIME-2%", TimeSystem.getSecond(TimeSystem.getMinute(TitleStatus[0]), TitleStatus[0])), 0, 20, 0);
                 TitleStatus[0]--;
 
             }

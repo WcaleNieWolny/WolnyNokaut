@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class JoinEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerJoinEvent event){
         Player p = event.getPlayer();
         //System.out.println(p.getWalkSpeed());

@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -14,7 +15,7 @@ import pl.wolny.junglenokaut.JungleNokaut;
 import java.util.Objects;
 
 public class PathFindingEvent implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void target(EntityTargetLivingEntityEvent event){
         if(event.getTarget() instanceof Player){
             Player target = (Player) event.getTarget();
@@ -23,7 +24,7 @@ public class PathFindingEvent implements Listener {
             }
         }
     }
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     public void event2(EntityDamageByEntityEvent event){
         if(event.getDamager() instanceof Monster && event.getEntity() instanceof Player){
             Player p = (Player) event.getEntity();
