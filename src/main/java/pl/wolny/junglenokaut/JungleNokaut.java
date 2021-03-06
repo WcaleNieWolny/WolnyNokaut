@@ -71,7 +71,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
         getCommand("podniesgracza").setExecutor(new PodniesGracza());
         getCommand("rzucgracza").setExecutor(new RzucGracza());
-        Bukkit.getPluginManager().registerEvents(new DismountEvent(), this);
+        //Bukkit.getPluginManager().registerEvents(new DismountEvent(), this);
     }
 
     @Override
