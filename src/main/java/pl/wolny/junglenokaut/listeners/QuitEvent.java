@@ -18,6 +18,11 @@ public class QuitEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerQuitEvent event){
         Player p = event.getPlayer();
+        if(p.getVehicle() != null){
+            if(p.getVehicle() instanceof Player){
+                ((Player) p.getVehicle()).removePotionEffect(PotionEffectType.SLOW);
+            }
+        }
         PersistentDataContainer data = p.getPersistentDataContainer();
         p.removePotionEffect(PotionEffectType.SLOW);
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
@@ -39,6 +44,11 @@ public class QuitEvent implements Listener {
         }
         Player p = event.getPlayer();
         p.removePotionEffect(PotionEffectType.SLOW);
+        if(p.getVehicle() != null){
+            if(p.getVehicle() instanceof Player){
+                ((Player) p.getVehicle()).removePotionEffect(PotionEffectType.SLOW);
+            }
+        }
         PersistentDataContainer data = p.getPersistentDataContainer();
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
             p.setGameMode(GameMode.SURVIVAL);

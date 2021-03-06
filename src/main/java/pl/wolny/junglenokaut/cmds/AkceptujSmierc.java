@@ -10,6 +10,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffectType;
 import pl.wolny.junglenokaut.JungleNokaut;
 
 public class AkceptujSmierc implements CommandExecutor {
@@ -27,6 +28,11 @@ public class AkceptujSmierc implements CommandExecutor {
         }
         executor.setHealth(0);
         executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathYes")));
+        if(executor.getVehicle() != null){
+            if(executor.getVehicle() instanceof Player){
+                ((Player) executor.getVehicle()).removePotionEffect(PotionEffectType.SLOW);
+            }
+        }
         return true;
     }
 }
