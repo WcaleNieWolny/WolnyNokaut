@@ -89,5 +89,10 @@
             <artifactId>jackson-databind</artifactId>
             <version>2.9.9.3</version>
         </dependency>
+        <dependency>
+            <groupId>me.rerere</groupId>
+            <artifactId>matrix</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 </project>

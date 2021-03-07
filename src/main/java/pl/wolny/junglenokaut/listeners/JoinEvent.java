@@ -2,6 +2,7 @@ package pl.wolny.junglenokaut.listeners;
 
 import net.minecraft.server.v1_16_R3.PacketPlayOutEntityDestroy;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -10,9 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import pl.wolny.junglenokaut.JungleNokaut;
 import pl.wolny.junglenokaut.utilities.GenerateFakePlayer;
+import pl.wolny.junglenokaut.utilities.ShowPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,16 @@ public class JoinEvent implements Listener {
         }
         if(!data.has(new NamespacedKey(JungleNokaut.getMain(), "NokPodnoszenie"), PersistentDataType.INTEGER)){
             data.set(new NamespacedKey(JungleNokaut.getMain(), "NokPodnoszenie"), PersistentDataType.INTEGER, 0);
+        }
+        if(!(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0)){
+            p.setGameMode(GameMode.SURVIVAL);
+            p.setWalkSpeed(0.2f);
+            p.setInvisible(false);
+            p.removePotionEffect(PotionEffectType.BLINDNESS);
+            p.setHealth(0);
+            data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
+            System.out.println("TRUE FOR " + p.getName());
+            return;
         }
         List<Player> list = new ArrayList<>(Bukkit.getOnlinePlayers());
         list.remove(event.getPlayer());

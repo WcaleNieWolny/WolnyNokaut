@@ -39,6 +39,9 @@ public class DropPlayer {
                     this.cancel();
                     return;
                 }
+                if(!toDrop.isOnline()){
+                    data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 6);
+                }
                 if(TitleStatus[0] == 0){
                     toDrop.setGameMode(GameMode.SURVIVAL);
                     toDrop.setWalkSpeed(0.2f);

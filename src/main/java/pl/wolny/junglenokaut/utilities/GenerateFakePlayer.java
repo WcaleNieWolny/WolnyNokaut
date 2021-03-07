@@ -1,25 +1,21 @@
 package pl.wolny.junglenokaut.utilities;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import net.minecraft.server.v1_16_R3.*;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.craftbukkit.v1_16_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_16_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_16_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_16_R3.entity.CraftWitch;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
 import pl.wolny.junglenokaut.JungleNokaut;
-import sun.security.util.KnownOIDs;
 
-import java.sql.Connection;
-import java.util.*;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GenerateFakePlayer{
@@ -96,7 +92,8 @@ public class GenerateFakePlayer{
         {
             public void run()
             {
-                if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0){
+                int a = data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER);
+                if(a == 0 || a == 6){
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
                     this.cancel();
                     connection.sendPacket(new PacketPlayOutEntityDestroy(entityPlayer.getId()));

@@ -13,6 +13,7 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.potion.PotionEffectType;
 import pl.wolny.junglenokaut.JungleNokaut;
+import pl.wolny.junglenokaut.utilities.DropPlayer;
 
 public class QuitEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
@@ -21,6 +22,8 @@ public class QuitEvent implements Listener {
         if(p.getVehicle() != null){
             if(p.getVehicle() instanceof Player){
                 ((Player) p.getVehicle()).removePotionEffect(PotionEffectType.SLOW);
+                DropPlayer.drop(p, ((Player) p.getVehicle()));
+                return;
             }
         }
         PersistentDataContainer data = p.getPersistentDataContainer();

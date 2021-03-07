@@ -1,5 +1,7 @@
 package pl.wolny.junglenokaut;
 
+import me.rerere.matrix.api.MatrixAPI;
+import me.rerere.matrix.api.MatrixAPIProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
@@ -9,6 +11,7 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import pl.wolny.junglenokaut.cmds.AkceptujSmierc;
 import pl.wolny.junglenokaut.cmds.PodniesGracza;
 import pl.wolny.junglenokaut.cmds.RzucGracza;
@@ -68,10 +71,21 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new BlockEvent(), this);
         Bukkit.getPluginManager().registerEvents(new DropListener(), this);
         Bukkit.getPluginManager().registerEvents(new AdminJoinEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new PacketLisener(), this);
         getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
         getCommand("podniesgracza").setExecutor(new PodniesGracza());
         getCommand("rzucgracza").setExecutor(new RzucGracza());
-        //Bukkit.getPluginManager().registerEvents(new DismountEvent(), this);
+        System.out.println(GetLastestTag.OpenCon());
+        Bukkit.getPluginManager().registerEvents(new DismountEvent(), this);
+        new BukkitRunnable()
+        {
+            public void run()
+            {
+                if(Bukkit.getPluginManager().isPluginEnabled("Matrix")){
+                    Bukkit.getPluginManager().registerEvents(new MatrixListener(), plugin);
+                }
+            }
+        }.runTaskLater(JungleNokaut.getMain(), 1200);
     }
 
     @Override
