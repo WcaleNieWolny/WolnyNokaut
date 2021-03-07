@@ -32,7 +32,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
     public void onEnable() {
         // Plugin startup logic
         if(!(isPaper())){
-            Bukkit.getLogger().info("Nie wykryto spigot'a na serwerze!");
+            Bukkit.getLogger().info("Nie wykryto papera'a na serwerze!");
             Bukkit.getLogger().info("Proszę go zainstalować przed użyciem pluginu");
             Bukkit.getLogger().info("Pobierzesz go tutaj: https://papermc.io/downloads");
             Bukkit.getPluginManager().disablePlugin(this);
