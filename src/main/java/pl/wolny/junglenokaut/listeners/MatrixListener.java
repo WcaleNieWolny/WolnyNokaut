@@ -15,7 +15,7 @@ public class MatrixListener implements Listener {
     public void event(PlayerViolationEvent event){
         if(event.getPlayer().getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0){
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
+            //event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
         }
     }
 }

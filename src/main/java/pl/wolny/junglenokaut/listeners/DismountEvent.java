@@ -19,7 +19,7 @@ public class DismountEvent implements Listener {
             int i = p.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER);
             if (i == 3) {
                 e.setCancelled(true);
-                System.out.println(p.getName() + " cancel");
+                //System.out.println(p.getName() + " cancel");
             }
         }
     }

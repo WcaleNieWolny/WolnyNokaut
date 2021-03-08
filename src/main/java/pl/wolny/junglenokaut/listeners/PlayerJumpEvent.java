@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.persistence.PersistentDataType;
 import pl.wolny.junglenokaut.JungleNokaut;
 
-public class PlayerJumpEvent implements Listener {
+public class  PlayerJumpEvent implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void event(PlayerMoveEvent event){
         int i = event.getPlayer().getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER);

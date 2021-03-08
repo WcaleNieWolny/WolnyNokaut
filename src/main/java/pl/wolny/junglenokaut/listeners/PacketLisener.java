@@ -41,9 +41,11 @@ public class PacketLisener implements Listener {
                 if(packet instanceof PacketPlayInUseEntity){
                     PacketPlayInUseEntity BlockedPacket = (PacketPlayInUseEntity) packet;
                     Entity entity = BlockedPacket.a(((CraftWorld) player.getWorld()).getHandle());
-                    if(entity.getId() == ((CraftPlayer) player).getHandle().getId()){
-                        Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "PACKET BLOCKED: " + ChatColor.GREEN + BlockedPacket.toString());
-                        return;
+                    if(entity != null){
+                        if(entity.getId() == ((CraftPlayer) player).getHandle().getId()){
+                            //Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "PACKET BLOCKED: " + ChatColor.GREEN + BlockedPacket.toString());
+                            return;
+                        }
                     }
                 }
             }

@@ -42,7 +42,7 @@ public class JoinEvent implements Listener {
             p.removePotionEffect(PotionEffectType.BLINDNESS);
             p.setHealth(0);
             data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
-            System.out.println("TRUE FOR " + p.getName());
+            //System.out.println("TRUE FOR " + p.getName());
             return;
         }
         List<Player> list = new ArrayList<>(Bukkit.getOnlinePlayers());
