@@ -18,21 +18,26 @@ public class AkceptujSmierc implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!(sender instanceof Player)){
             System.out.println("Nice try :)");
-            return false;
+            return true;
         }
+
         Player executor = (Player) sender;
         PersistentDataContainer data = executor.getPersistentDataContainer();
+
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0){
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathNo")));
-            return false;
+            return true;
         }
+
         executor.setHealth(0);
         executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathYes")));
+
         if(executor.getVehicle() != null){
             if(executor.getVehicle() instanceof Player){
                 ((Player) executor.getVehicle()).removePotionEffect(PotionEffectType.SLOW);
             }
         }
+
         return true;
     }
 }

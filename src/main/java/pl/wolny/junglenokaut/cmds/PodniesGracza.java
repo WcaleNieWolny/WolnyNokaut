@@ -33,41 +33,50 @@ public class PodniesGracza implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(!(sender instanceof Player)){
             System.out.println("Nice try :)");
-            return false;
+            return true;
         }
+
         Player executor = (Player) sender;
+
         if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("DisableCMD")));
-            return false;
+            return true;
         }
+
         if(executor.getPassengers().size() != 0){
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotDoThat")));
         }
+
         //PersistentDataContainer ExecutorData = executor.getPersistentDataContainer();
         List<Entity> nearbyEntites = (List<Entity>) executor.getWorld().getNearbyEntities(executor.getLocation(), 1, 3, 1);
         if(nearbyEntites.size() == 0){
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotPickupYourSelf")));
-            return false;
+            return true;
         }
+
         List<Player> players = new ArrayList<>();
         for (Entity entity: nearbyEntites) {
             if(entity instanceof Player){
                 players.add((Player) entity);
             }
         }
+
         players.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1);
         if(players.contains(executor)){
             players.remove(executor);
         }
+
         if(players.size() != 1){
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotPickupYourSelf")));
-            return false;
+            return true;
         }
+
         Player knocked = players.get(0);
         PersistentDataContainer KnockedData = knocked.getPersistentDataContainer();
         KnockedData.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 3);
         executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("PickupSuckess").replace("%USER%", players.get(0).getName())));
         executor.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 0));
+
         EntityPlayer KnockedEntity = ((CraftPlayer) knocked).getHandle();
         knocked.setGameMode(GameMode.SPECTATOR);
         knocked.setSpectatorTarget(executor);
