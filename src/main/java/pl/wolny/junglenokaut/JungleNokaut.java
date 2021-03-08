@@ -102,6 +102,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new AdminJoinEvent(), this);
         Bukkit.getPluginManager().registerEvents(new PacketLisener(), this);
         Bukkit.getPluginManager().registerEvents(new DismountListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerViolationListener(), this);
     }
 
     private void registerCommands(){
