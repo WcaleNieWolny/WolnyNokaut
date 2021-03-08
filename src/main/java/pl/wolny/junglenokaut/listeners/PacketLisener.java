@@ -15,12 +15,12 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PacketLisener implements Listener {
     @EventHandler
-    public void onjoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event){
         injectPlayer(event.getPlayer());
     }
 
     @EventHandler
-    public void onleave(PlayerQuitEvent event){
+    public void onPlayerQuit(PlayerQuitEvent event){
         removePlayer(event.getPlayer());
     }
     private void removePlayer(Player player) {

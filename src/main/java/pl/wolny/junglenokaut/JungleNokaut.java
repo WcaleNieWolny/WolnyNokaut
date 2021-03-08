@@ -11,14 +11,12 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import pl.wolny.junglenokaut.cmds.AkceptujSmierc;
 import pl.wolny.junglenokaut.cmds.PodniesGracza;
 import pl.wolny.junglenokaut.cmds.RzucGracza;
 import pl.wolny.junglenokaut.listeners.*;
 import pl.wolny.junglenokaut.updater.GetLastestTag;
 import pl.wolny.junglenokaut.updater.*;
-import pl.wolny.junglenokaut.utilities.Metrics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,33 +57,11 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         getConfig().addDefault("SuckessDrop", "&aUpuściłeś %USER%.");
         getConfig().options().copyDefaults(true);
         saveConfig();
-        Metrics metrics = new Metrics(this, 10544);
-        //Bukkit.getPluginManager().registerEvents(this, this);
-        Bukkit.getPluginManager().registerEvents(new JoinEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new DeathEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new QuitEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new PlayerJumpEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new PathFindingEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new DamageEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new SneakEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new BlockEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new DropListener(), this);
-        Bukkit.getPluginManager().registerEvents(new AdminJoinEvent(), this);
-        Bukkit.getPluginManager().registerEvents(new PacketLisener(), this);
-        getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
-        getCommand("podniesgracza").setExecutor(new PodniesGracza());
-        getCommand("rzucgracza").setExecutor(new RzucGracza());
-        //System.out.println(GetLastestTag.OpenCon());
-        Bukkit.getPluginManager().registerEvents(new DismountEvent(), this);
-        new BukkitRunnable()
-        {
-            public void run()
-            {
-                if(Bukkit.getPluginManager().isPluginEnabled("Matrix")){
-                    Bukkit.getPluginManager().registerEvents(new MatrixListener(), plugin);
-                }
-            }
-        }.runTaskLater(JungleNokaut.getMain(), 1200);
+
+        registerEvents();
+        registerCommands();
+
+        System.out.println(GetLastestTag.OpenCon());
     }
 
     @Override
@@ -102,6 +78,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
             p.getPersistentDataContainer().set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
         }
     }
+
     private boolean isPaper(){
         boolean isPapermc = false;
         try {
@@ -110,5 +87,27 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         }
         return  isPapermc;
         //Source: https://papermc.io/forums/t/checking-for-server-type-paper-spigot-or-bukkit/981
+    }
+
+    private void registerEvents(){
+        Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener2(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerJumpListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PathFindingListener(), this);
+        Bukkit.getPluginManager().registerEvents(new DamageListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerToggleSneakListener(), this);
+        Bukkit.getPluginManager().registerEvents(new BlockListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerQuitListener(), this);
+        Bukkit.getPluginManager().registerEvents(new AdminJoinEvent(), this);
+        Bukkit.getPluginManager().registerEvents(new PacketLisener(), this);
+        Bukkit.getPluginManager().registerEvents(new DismountListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerViolationListener(), this);
+    }
+
+    private void registerCommands(){
+        getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
+        getCommand("podniesgracza").setExecutor(new PodniesGracza());
+        getCommand("rzucgracza").setExecutor(new RzucGracza());
     }
 }
