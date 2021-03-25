@@ -39,18 +39,18 @@ public class PodniesGracza implements CommandExecutor {
         Player executor = (Player) sender;
 
         if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("DisableCMD")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("DisableCMD")));
             return true;
         }
 
         if(executor.getPassengers().size() != 0){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotDoThat")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("CanNotDoThat")));
         }
 
         //PersistentDataContainer ExecutorData = executor.getPersistentDataContainer();
         List<Entity> nearbyEntites = (List<Entity>) executor.getWorld().getNearbyEntities(executor.getLocation(), 1, 3, 1);
         if(nearbyEntites.size() == 0){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotPickupYourSelf")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("CanNotPickupYourSelf")));
             return true;
         }
 
@@ -67,7 +67,7 @@ public class PodniesGracza implements CommandExecutor {
         }
 
         if(players.size() != 1){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("CanNotPickupYourSelf")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("CanNotPickupYourSelf")));
             return true;
         }
 
@@ -82,7 +82,7 @@ public class PodniesGracza implements CommandExecutor {
         knocked.setSpectatorTarget(executor);
         KnockedEntity.playerInteractManager.setGameMode(EnumGamemode.ADVENTURE);
         //sendGameState(knocked, executor);
-        String PickupForUser = JungleNokaut.getMain().getConfig().getString("PickupForUser");
+        String PickupForUser = JungleNokaut.getConfigData().getString("PickupForUser");
         new BukkitRunnable()
         {
             public void run()

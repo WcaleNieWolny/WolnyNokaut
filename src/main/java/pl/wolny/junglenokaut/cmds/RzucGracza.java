@@ -32,24 +32,24 @@ public class RzucGracza implements CommandExecutor {
 
         Player executor = (Player) sender;
         if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("DisableCMD")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("DisableCMD")));
             return true;
         }
 
         if(executor.getPassengers().size() != 1){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("NoPlayerToDrop")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("NoPlayerToDrop")));
             return true;
         }
 
         Entity toDropEnt = executor.getPassengers().get(0);
 
         if(!(toDropEnt instanceof  Player)) {
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("NoPlayerToDrop")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("NoPlayerToDrop")));
             return true;
         }
 
         Player toDrop = (Player) toDropEnt;
-        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("SuckessDrop").replace("%USER%", toDrop.getName())));
+        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("SuckessDrop").replace("%USER%", toDrop.getName())));
         executor.removePotionEffect(PotionEffectType.SLOW);
         PersistentDataContainer data = toDrop.getPersistentDataContainer();
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 10);
@@ -66,8 +66,8 @@ public class RzucGracza implements CommandExecutor {
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 4);
 
         int[] TitleStatus = {data.get(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER)};
-        String KnockedLine1 = JungleNokaut.getMain().getConfig().getString("KnockedLine1");
-        String KnockedLine2 = JungleNokaut.getMain().getConfig().getString("KnockedLine2");
+        String KnockedLine1 = JungleNokaut.getConfigData().getString("KnockedLine1");
+        String KnockedLine2 = JungleNokaut.getConfigData().getString("KnockedLine2");
 
         new BukkitRunnable()
         {

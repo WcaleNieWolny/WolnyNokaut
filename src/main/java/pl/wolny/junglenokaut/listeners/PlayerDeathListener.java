@@ -53,9 +53,9 @@ public class PlayerDeathListener implements Listener {
     player.setInvisible(true);
     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 1);
 
-    final int[] TitleStatus = {JungleNokaut.getMain().getConfig().getInt("NocCooldown")};
-    String KnockedLine1 = JungleNokaut.getMain().getConfig().getString("KnockedLine1");
-    String KnockedLine2 = JungleNokaut.getMain().getConfig().getString("KnockedLine2");
+    final int[] TitleStatus = {JungleNokaut.getConfigData().getInt("NocCooldown")};
+    String KnockedLine1 = JungleNokaut.getConfigData().getString("KnockedLine1");
+    String KnockedLine2 = JungleNokaut.getConfigData().getString("KnockedLine2");
 
     new BukkitRunnable() {
       public void run() {

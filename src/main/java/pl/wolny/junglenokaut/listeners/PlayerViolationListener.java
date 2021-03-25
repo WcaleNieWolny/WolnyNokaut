@@ -20,6 +20,6 @@ public class PlayerViolationListener implements Listener {
     }
 
     event.setCancelled(true);
-    player.sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
+    //player.sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
   }
 }

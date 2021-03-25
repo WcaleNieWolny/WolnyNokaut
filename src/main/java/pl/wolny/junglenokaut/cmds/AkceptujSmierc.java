@@ -25,12 +25,12 @@ public class AkceptujSmierc implements CommandExecutor {
         PersistentDataContainer data = executor.getPersistentDataContainer();
 
         if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0){
-            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathNo")));
+            executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("AcceptDeathNo")));
             return true;
         }
 
         executor.setHealth(0);
-        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getMain().getConfig().getString("AcceptDeathYes")));
+        executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("AcceptDeathYes")));
 
         if(executor.getVehicle() != null){
             if(executor.getVehicle() instanceof Player){

@@ -5,6 +5,7 @@ import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,10 +52,10 @@ public class PlayerToggleSneakListener implements Listener {
       return;
     }
 
-    FileConfiguration config = JungleNokaut.getMain().getConfig();
+    YamlConfiguration config = JungleNokaut.getConfigData();
     int i = Integer.parseInt(config.getString("HealXP"));
 
-    if (player.getTotalExperience() < i) {
+    if (player.getTotalExperience() <= i) {
       return;
     }
 
@@ -138,7 +139,7 @@ public class PlayerToggleSneakListener implements Listener {
           return;
         }
 
-        int i = JungleNokaut.getMain().getConfig().getInt("HealXP");
+        int i = config.getInt("HealXP");
 
         if (player.getTotalExperience() < i) {
           player.setWalkSpeed(0.2f);

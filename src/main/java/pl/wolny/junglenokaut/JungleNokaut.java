@@ -5,6 +5,7 @@ import me.rerere.matrix.api.MatrixAPIProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.persistence.PersistentDataType;
@@ -17,15 +18,19 @@ import pl.wolny.junglenokaut.cmds.RzucGracza;
 import pl.wolny.junglenokaut.listeners.*;
 import pl.wolny.junglenokaut.updater.GetLastestTag;
 import pl.wolny.junglenokaut.updater.*;
+import pl.wolny.junglenokaut.utilities.ConfigFile;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.logging.Logger;
 public final class JungleNokaut extends JavaPlugin implements Listener {
+    public static YamlConfiguration configData;
     public static Plugin plugin;
     public static Plugin getMain(){
         return plugin;
     }
+    public static YamlConfiguration getConfigData(){return configData;}
     @Override
     public void onEnable() {
         // Plugin startup logic
@@ -37,27 +42,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
             return;
         }
         plugin = this;
-        getConfig().addDefault("NocCooldown", 60);
-        getConfig().addDefault("HealCooldown", 10);
-        getConfig().addDefault("HealXP", 7);
-        getConfig().addDefault("PickupModule", true);
-        getConfig().addDefault("DisableCMD", "&cTa komenda jest wyłączona!");
-        getConfig().addDefault("NoPlayerToDrop", "&cBrak graczy których można upuścić!");
-        getConfig().addDefault("KnockedLine1", "&a&lJesteś powalony!");
-        getConfig().addDefault("KnockedLine2", "&cPozostało: %TIME-1%:%TIME-2%");
-        getConfig().addDefault("ResuscitationForDeadLine1", "&a&lReanimowanie!");
-        getConfig().addDefault("ResuscitationForDeadLine2", "&cPozostało: %TIME%");
-        getConfig().addDefault("ResuscitationForHeal", "&aReanimowanie");
-        getConfig().addDefault("AcceptDeathNo", "&cŻycie jest piekne, dlaczego chcesz popełnić samobójstwo?");
-        getConfig().addDefault("AcceptDeathYes", "&aHara-kiri popełnione. Miłego dnia.");
-        getConfig().addDefault("CanNotDoThat", "&cNie możesz tego zrobić!");
-        getConfig().addDefault("CanNotPickupYourSelf", "&cNie możesz podnieść samego siebie!");
-        getConfig().addDefault("PickupSuckess", "&aPodniosłeś %USER%.");
-        getConfig().addDefault("PickupForUser", "&aJesteś podniesiony.");
-        getConfig().addDefault("SuckessDrop", "&aUpuściłeś %USER%.");
-        getConfig().options().copyDefaults(true);
-        saveConfig();
-
+        checkConfig();
         registerEvents();
         registerCommands();
 
@@ -109,5 +94,52 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
         getCommand("podniesgracza").setExecutor(new PodniesGracza());
         getCommand("rzucgracza").setExecutor(new RzucGracza());
+    }
+    public void checkConfig(){
+        Logger logger = Bukkit.getLogger();
+        logger.info(">>> " + this.getDescription().getName() + " <<<");
+        logger.info("Initializing the configuration file");
+        logger.info("Performing tests");
+        ConfigFile config = new ConfigFile(this);
+        if(!(config.getFile().exists())) {
+            genConfig(config);
+            logger.info("Test 1 failed!");
+            return;
+        }
+        if(!(config.check(new String[]{"NocCooldown", "HealCooldown", "HealXP", "PickupModule", "DisableCMD", "NoPlayerToDrop", "KnockedLine1",
+                "KnockedLine2", "ResuscitationForDeadLine1", "ResuscitationForDeadLine2", "ResuscitationForHeal",
+                "AcceptDeathNo", "AcceptDeathYes", "CanNotDoThat", "CanNotPickupYourSelf", "PickupSuckess", "PickupForUser", "SuckessDrop"}))){
+            config.getFile().delete();
+            genConfig(config);
+            logger.info("Test 2 failed!");
+            return;
+        }
+        logger.info("Each test was successful!");
+        logger.info(">>> " + this.getDescription().getName() + " <<<");
+        configData = config.getYamlConfig();
+    }
+    public void genConfig(ConfigFile config){
+        YamlConfiguration yamlConfiguration = config.getYamlConfig();
+        yamlConfiguration.set("NocCooldown", 60);
+        yamlConfiguration.set("HealCooldown", 10);
+        yamlConfiguration.set("HealXP", 7);
+        yamlConfiguration.set("PickupModule", true);
+        yamlConfiguration.set("DisableCMD", "&cTa komenda jest wyłączona!");
+        yamlConfiguration.set("NoPlayerToDrop", "&cBrak graczy których można upuścić!");
+        yamlConfiguration.set("KnockedLine1", "&a&lJesteś powalony!");
+        yamlConfiguration.set("KnockedLine2", "&cPozostało: %TIME-1%:%TIME-2%");
+        yamlConfiguration.set("ResuscitationForDeadLine1", "&a&lReanimowanie!");
+        yamlConfiguration.set("ResuscitationForDeadLine2", "&cPozostało: %TIME%");
+        yamlConfiguration.set("ResuscitationForHeal", "&aReanimowanie");
+        yamlConfiguration.set("AcceptDeathNo", "&cŻycie jest piekne, dlaczego chcesz popełnić samobójstwo?");
+        yamlConfiguration.set("AcceptDeathYes", "&aHara-kiri popełnione. Miłego dnia.");
+        yamlConfiguration.set("CanNotDoThat", "&cNie możesz tego zrobić!");
+        yamlConfiguration.set("CanNotPickupYourSelf", "&cNie możesz podnieść samego siebie!");
+        yamlConfiguration.set("PickupSuckess", "&aPodniosłeś %USER%.");
+        yamlConfiguration.set("PickupForUser", "&aJesteś podniesiony.");
+        yamlConfiguration.set("SuckessDrop", "&aUpuściłeś %USER%.");
+        config.setYamlConfig(yamlConfiguration);
+        config.save();
+        configData = config.getYamlConfig();
     }
 }
