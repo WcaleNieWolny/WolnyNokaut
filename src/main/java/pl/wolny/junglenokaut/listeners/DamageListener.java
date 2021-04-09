@@ -12,24 +12,19 @@ import pl.wolny.junglenokaut.JungleNokaut;
 
 public class DamageListener implements Listener {
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onEntityDamge(EntityDamageEvent event) {
-    Entity entity = event.getEntity();
+  public class DamageEvent implements Listener {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerDamage(EntityDamageEvent e) {
+      if (e.getEntity() instanceof Player) {
+        Player p = (Player) e.getEntity();
+        if (p.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
+          if (!(e.getCause().equals(EntityDamageEvent.DamageCause.DROWNING) || e.getCause().equals(EntityDamageEvent.DamageCause.SUFFOCATION))) {
+            e.setCancelled(true);
+            return;
+          }
 
-    if (!(entity instanceof Player)) {
-      return;
+        }
+      }
     }
-
-    if (entity.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
-      return;
-    }
-
-    EntityDamageEvent.DamageCause damageCause = event.getCause();
-
-    if (damageCause == EntityDamageEvent.DamageCause.DROWNING || damageCause == EntityDamageEvent.DamageCause.SUFFOCATION) {
-      return;
-    }
-
-    event.setCancelled(true);
   }
 }

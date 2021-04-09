@@ -66,7 +66,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onPlayerInteract(PlayerInteractEvent event) {
-    if (!checkPersistentDataContainer(event.getPlayer())) {
+    if (checkPersistentDataContainer(event.getPlayer())) {
       return;
     }
 
@@ -76,7 +76,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onBlockBreak(BlockBreakEvent event) {
-    if (!checkPersistentDataContainer(event.getPlayer())) {
+    if (checkPersistentDataContainer(event.getPlayer())) {
       return;
     }
 
@@ -86,7 +86,7 @@ public class BlockListener implements Listener {
 
   @EventHandler(priority = EventPriority.HIGH)
   public void onBlockPlace(BlockPlaceEvent event) {
-    if (!checkPersistentDataContainer(event.getPlayer())) {
+    if (checkPersistentDataContainer(event.getPlayer())) {
       return;
     }
 
@@ -100,7 +100,7 @@ public class BlockListener implements Listener {
       return;
     }
 
-    if (!checkPersistentDataContainer(event.getEntity())) {
+    if (checkPersistentDataContainer(event.getEntity())) {
       return;
     }
 
@@ -108,6 +108,6 @@ public class BlockListener implements Listener {
   }
 
   private boolean checkPersistentDataContainer(Entity player) {
-    return player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0;
+    return player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0;
   }
 }

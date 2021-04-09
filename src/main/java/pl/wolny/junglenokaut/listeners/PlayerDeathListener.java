@@ -27,6 +27,9 @@ public class PlayerDeathListener implements Listener {
     if (player.getPassengers().size() != 0) {
       return;
     }
+    if(player.getWorld().getName().contains("end") && 0 > player.getLocation().getY()){
+      return;
+    }
 
     if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
       player.setGameMode(GameMode.SURVIVAL);
