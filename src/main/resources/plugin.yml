@@ -1,23 +1,13 @@
-name: TobiaszNokaut
-version: ${project.version}
-main: pl.wolny.junglenokaut.JungleNokaut
-api-version: 1.16
-author: WcaleNieWolny
-description: Nokaut pisany na zlecenie.
-softdepend: [Matrix]
+name: WolnyNokaut
+version: '${project.version}'
+main: pl.wolny.wolnynokaut.WolnyNokaut
+api-version: 1.18
+authors: [ WcaleNieWolny ]
+description: Knockaut - implementation without any packet bs
+depend: [ProtocolLib]
 commands:
-  akceptujsmierc:
-    description: Akceptuje śmierć.
+  harakiri:
+    description: Accepts death.
     aliases:
       - zginodrazu
-      - harakiri
-  podniesgracza:
-    description: Podnosi gracza.
-  rzucgracza:
-    aliases:
-      - zrzucgracza
-    description: Rzuca gracza.
-permissions:
-  tobiasznokaut.updateinfo:
-    description: shows information about the update
-    default: op
+      - akceptujsmierc
