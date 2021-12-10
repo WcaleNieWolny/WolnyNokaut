@@ -21,6 +21,7 @@
     </properties>
 
     <build>
+        <sourceDirectory>src/main/kotlin</sourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -94,10 +95,6 @@
             <id>panda</id>
             <url>https://repo.panda-lang.org/releases</url>
         </repository>
-        <repository>
-            <id>spigot-repo</id>
-            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -128,11 +125,6 @@
             <groupId>net.dzikoysk</groupId>
             <artifactId>cdn</artifactId>
             <version>1.11.6</version>
-        </dependency>
-        <dependency>
-            <groupId>org.spigotmc</groupId>
-            <artifactId>plugin-annotations</artifactId>
-            <version>1.2.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
