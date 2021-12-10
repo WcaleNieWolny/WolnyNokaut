@@ -8,6 +8,7 @@ import pl.wolny.wolnynokaut.commands.HarakiriCmd
 import pl.wolny.wolnynokaut.knocked.KnockedCache
 
 import pl.wolny.wolnynokaut.knocked.KnockedFactory
+import pl.wolny.wolnynokaut.listeners.DamageListener
 import pl.wolny.wolnynokaut.listeners.DeathListener
 import pl.wolny.wolnynokaut.listeners.SneakListener
 import pl.wolny.wolnynokaut.map.MapDataFile
@@ -48,5 +49,6 @@ class WolnyNokaut : JavaPlugin() {
         val manager = Bukkit.getPluginManager()
         manager.registerEvents(DeathListener(knockedCache, this), this)
         manager.registerEvents(SneakListener(knockedCache), this)
+        manager.registerEvents(DamageListener(knockedCache), this)
     }
 }
