@@ -122,6 +122,7 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
                     startInternalTimers()
                     knockedBossbar.switchFoDed()
                     isTreated = false
+                    medic.clearTitle()
                     return
                 }
                 i1 += 1
