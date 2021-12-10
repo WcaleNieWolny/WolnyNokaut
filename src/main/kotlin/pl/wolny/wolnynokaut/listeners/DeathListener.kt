@@ -4,6 +4,7 @@ import org.bukkit.NamespacedKey
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
@@ -15,6 +16,9 @@ class DeathListener(private val cache: KnockedCache, private val plugin: JavaPlu
     @EventHandler(priority = EventPriority.HIGH)
     fun onPlayerDeath(event: PlayerDeathEvent) {
         val player = event.player
+        if(player.lastDamageCause!!.cause == EntityDamageEvent.DamageCause.VOID){
+            return
+        }
         val dataContainer = player.persistentDataContainer
         val namespacedKey = NamespacedKey(plugin, "die_on_event")
         val data = dataContainer.get(namespacedKey, PersistentDataType.BYTE)
