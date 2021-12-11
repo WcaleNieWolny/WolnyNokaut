@@ -134,7 +134,7 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
                     Duration.ofSeconds(6),
                     Duration.ofSeconds(0))))
                 time -= 0.25
-                medic.giveExp(-xp / 4);
+                medic.giveExp(-xp);
                 if(i1 == msg1.size-1){
                     i1 = -1;
                 }
