@@ -3,6 +3,8 @@ package pl.wolny.wolnynokaut
 import net.dzikoysk.cdn.entity.Description
 
 class NokautConfig {
+    @Description("Time will be knocked down. Be aware that this have time + 1 formula")
+    var dedTime = 60
     @Description("XP needed to heal player (per second)")
     var healXP = 20
     @Description("Time required to rescue a player")

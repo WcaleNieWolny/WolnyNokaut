@@ -28,7 +28,7 @@ import kotlin.math.sqrt
 
 class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, private val plugin: JavaPlugin, private val config: NokautConfig, private val cache: KnockedCache) {
     var state: KnockedState = KnockedState.GROUND
-    var time = 30
+    var time = config.dedTime
     var destroyed = false
     var isTreated = false
     var internalTimer = false
@@ -60,6 +60,7 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
         startInternalTimers()
     }
     fun killAndStop(){
+        cache.knockedPlayers.remove(player.uniqueId)
         limboUtils.removeFromLimbo(player)
         limboUtils.removePlayerSlotLimitation(player)
         stopInternalTimers(true)
@@ -85,7 +86,7 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
             return
         }
         timeRunnable = getTimeRunnable()
-        timeRunnable.runTaskTimer(plugin, 0, 20)
+        timeRunnable.runTaskTimer(plugin, 20, 20)
         internalTimer = true
         knockedBossbar.start()
 
@@ -102,8 +103,9 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
 
     fun startRecovery(medic: Player) {
         if(isTreated){return}
-        stopInternalTimers(false)
         val xp = config.healXP
+        if(medic.totalExperience < xp){return}
+        stopInternalTimers(false)
         val msg1 = config.resuscitationForHeal1
         val msg2 = config.resuscitationForHeal2
         var time: Double = config.treatmentTime.toDouble()
@@ -116,8 +118,8 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
                 if(destroyed){
                     this.cancel()
                 }
-                //medic.totalExperience < xp
-                if(!medic.isSneaking || !medic.isOnline || distance(player.location, medic.location) >= 1.25){
+                //
+                if(!medic.isSneaking || !medic.isOnline || medic.totalExperience < xp || distance(player.location, medic.location) >= 1.25){
                     this.cancel()
                     startInternalTimers()
                     knockedBossbar.switchFoDed()
