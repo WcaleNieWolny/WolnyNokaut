@@ -26,17 +26,25 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 
-class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, private val plugin: JavaPlugin, private val config: NokautConfig, private val cache: KnockedCache) {
+class KnockedPlayer(val player: Player,
+                    private val limboUtils: LimboUtils,
+                    private val plugin: JavaPlugin,
+                    private val cache: KnockedCache,
+                    private val knockedBossbar: KnockedBossbar,
+                    dedTime: Short, private val healXP: Short,
+                    private val resuscitationForHeal1: List<String>,
+                    private val resuscitationForHeal2: List<String>,
+                    private val treatmentTime: Short
+                    ) {
     var state: KnockedState = KnockedState.GROUND
-    var time = config.dedTime
+    var time = dedTime
     var destroyed = false
     var isTreated = false
     var internalTimer = false
-    private val knockedBossbar = KnockedBossbar(player, time = time.toFloat(), config.treatmentTime.toFloat(), plugin)
 
     private fun getTimeRunnable(): BukkitRunnable = object : BukkitRunnable(){
         override fun run() {
-            time -= 1
+            time = (time - 1).toShort()
             if(time <= 0){
                 killAndStop()
             }
@@ -103,12 +111,9 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
 
     fun startRecovery(medic: Player) {
         if(isTreated){return}
-        val xp = config.healXP
-        if(medic.totalExperience < xp){return}
+        if(medic.totalExperience < healXP){return}
         stopInternalTimers(false)
-        val msg1 = config.resuscitationForHeal1
-        val msg2 = config.resuscitationForHeal2
-        var time: Double = config.treatmentTime.toDouble()
+        var time: Double = treatmentTime.toDouble()
         var i1 = -1
         var i2 = 0
         isTreated = true
@@ -119,7 +124,7 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
                     this.cancel()
                 }
                 //
-                if(!medic.isSneaking || !medic.isOnline || medic.totalExperience < xp || distance(player.location, medic.location) >= 1.25){
+                if(!medic.isSneaking || !medic.isOnline || medic.totalExperience < healXP || distance(player.location, medic.location) >= 1.25){
                     this.cancel()
                     startInternalTimers()
                     knockedBossbar.switchFoDed()
@@ -129,16 +134,16 @@ class KnockedPlayer(val player: Player, private val limboUtils: LimboUtils, priv
                 }
                 i1 += 1
                 i2 += 1
-                medic.showTitle(Title.title(ComponentUtils.format(msg1[i1]), ComponentUtils.format(msg2[i2]), Title.Times.of(
+                medic.showTitle(Title.title(ComponentUtils.format(resuscitationForHeal1[i1]), ComponentUtils.format(resuscitationForHeal2[i2]), Title.Times.of(
                     Duration.ofSeconds(0),
                     Duration.ofSeconds(6),
                     Duration.ofSeconds(0))))
                 time -= 0.25
-                medic.giveExp(-xp);
-                if(i1 == msg1.size-1){
+                medic.giveExp(-healXP);
+                if(i1 == resuscitationForHeal1.size-1){
                     i1 = -1;
                 }
-                if(i2 == msg2.size-1){
+                if(i2 == resuscitationForHeal1.size-1){
                     i2 = -1;
                 }
                 if(time == 0.00){

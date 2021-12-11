@@ -12,14 +12,14 @@ class HarakiriCmd(val cache: KnockedCache, val config: NokautConfig) : CommandEx
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if(sender !is Player){
             sender.sendMessage(ComponentUtils.format(config.notAllowed))
-            return false
+            return true
         }
         if(cache[sender.uniqueId] == null){
             sender.sendMessage(ComponentUtils.format(config.harakiriDisallow))
-            return false
+            return true
         }
         sender.sendMessage(ComponentUtils.format(config.harakiriPermit))
         cache[sender.uniqueId] ?.killAndStop()
-        return false
+        return true
     }
 }

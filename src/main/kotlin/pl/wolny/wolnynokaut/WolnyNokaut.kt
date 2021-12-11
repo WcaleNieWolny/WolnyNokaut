@@ -1,6 +1,9 @@
 package pl.wolny.wolnynokaut
 
 import net.dzikoysk.cdn.CdnFactory
+import net.dzikoysk.cdn.KCdnFactory
+import net.dzikoysk.cdn.loadAs
+import net.dzikoysk.cdn.model.Element
 import net.dzikoysk.cdn.source.Source
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -20,20 +23,34 @@ import java.io.File
 
 class WolnyNokaut : JavaPlugin() {
     private lateinit var limboUtils: LimboUtils
-    private lateinit var imageUtils: ImageUtils
     private lateinit var mapFactory: MapFactory
     private lateinit var knockedFactory: KnockedFactory
     private lateinit var knockedCache: KnockedCache
     private lateinit var config: NokautConfig
     override fun onEnable() {
         // Plugin startup logic
-        imageUtils = ImageUtils()
-        val file = File(this.dataFolder.absolutePath + "/map_data.cdn")
-        val cdn = CdnFactory.createYamlLike()
-        val mapDataFile: MapDataFile = cdn.load(Source.of(file), MapDataFile::class.java)
-        config = cdn.load(Source.of(File(this.dataFolder.absolutePath + "/config.cdn")), NokautConfig::class.java)
-        cdn.render(config, File(this.dataFolder.absolutePath + "/config.cdn"))
-        mapFactory = MapFactory(mapDataFile.mapId, imageUtils, cdn, mapDataFile, file)
+        val file = File(this.dataFolder, "map_data.cdn")
+        val cdn = KCdnFactory.createYamlLike()
+        val mapSource = Source.of(file)
+        val mapDataFileResult = cdn.loadAs<MapDataFile>(mapSource)
+        if(!mapDataFileResult.isErr){
+            logger.info("Map data file error: ${mapDataFileResult.error}")
+            pluginLoader.disablePlugin(this)
+            return
+        }
+        val mapDataFile = mapDataFileResult.get()
+        val configFile = File(this.dataFolder, "config.cdn")
+        val configSource = Source.of(configFile)
+        val configResult = cdn.load(configSource, NokautConfig::class.java)
+        if(configResult.isErr){
+            logger.info("Map data file error: ${mapDataFileResult.error}")
+            pluginLoader.disablePlugin(this)
+            return
+        }
+        config = configResult.get()
+        cdn.render(mapDataFile, Source.of(file))
+        cdn.render(config, configSource)
+        mapFactory = MapFactory(mapDataFile.mapId, cdn, mapDataFile, file)
         limboUtils = LimboUtils(this, mapFactory)
         knockedCache = KnockedCache()
         knockedFactory = KnockedFactory(this, limboUtils, config, knockedCache)

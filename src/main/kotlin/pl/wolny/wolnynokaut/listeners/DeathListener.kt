@@ -22,7 +22,7 @@ class DeathListener(private val cache: KnockedCache, private val plugin: JavaPlu
         val dataContainer = player.persistentDataContainer
         val namespacedKey = NamespacedKey(plugin, "die_on_event")
         val data = dataContainer.get(namespacedKey, PersistentDataType.BYTE)
-        data.let { if(data == (1).toByte()){
+        data.apply { if(data == (1).toByte()){
             dataContainer.set(namespacedKey, PersistentDataType.BYTE, 0)
             return
         }}

@@ -9,9 +9,9 @@ import pl.wolny.wolnynokaut.utils.ImageUtils
 import java.io.InputStream
 
 
-class CustomMapRender(private val imageUtils: ImageUtils, private val inputStream: InputStream) : MapRenderer() {
+class CustomMapRender(private val inputStream: InputStream) : MapRenderer() {
     override fun render(map: MapView, canvas: MapCanvas, player: Player) {
         if(inputStream == null){return}
-        canvas.drawImage(0, 0, imageUtils.loadImage(inputStream))
+        canvas.drawImage(0, 0, ImageUtils.loadImage(inputStream))
     }
 }

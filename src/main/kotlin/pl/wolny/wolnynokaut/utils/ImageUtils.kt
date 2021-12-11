@@ -6,10 +6,9 @@ import java.io.InputStream
 import javax.imageio.ImageIO
 
 
-class ImageUtils {
-    private val classLoader: ClassLoader = javaClass.classLoader
+object ImageUtils {
     fun loadInputStream(fileName: String) : InputStream{
-        return classLoader.getResourceAsStream(fileName)
+        return javaClass.classLoader.getResourceAsStream(fileName)
             ?: throw IllegalArgumentException("file not found! $fileName")
     }
     fun loadImage(inputStream: InputStream): BufferedImage{
