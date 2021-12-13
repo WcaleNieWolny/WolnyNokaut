@@ -1,9 +1,7 @@
 package pl.wolny.wolnynokaut
 
-import net.dzikoysk.cdn.CdnFactory
 import net.dzikoysk.cdn.KCdnFactory
 import net.dzikoysk.cdn.loadAs
-import net.dzikoysk.cdn.model.Element
 import net.dzikoysk.cdn.source.Source
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -16,13 +14,12 @@ import pl.wolny.wolnynokaut.listeners.DeathListener
 import pl.wolny.wolnynokaut.listeners.SneakListener
 import pl.wolny.wolnynokaut.map.MapDataFile
 import pl.wolny.wolnynokaut.map.MapFactory
-import pl.wolny.wolnynokaut.utils.ImageUtils
-import pl.wolny.wolnynokaut.utils.LimboUtils
+import pl.wolny.wolnynokaut.limbo.LimboControler
 import java.io.File
 
 
 class WolnyNokaut : JavaPlugin() {
-    private lateinit var limboUtils: LimboUtils
+    private lateinit var limboControler: LimboControler
     private lateinit var mapFactory: MapFactory
     private lateinit var knockedFactory: KnockedFactory
     private lateinit var knockedCache: KnockedCache
@@ -51,9 +48,10 @@ class WolnyNokaut : JavaPlugin() {
         cdn.render(mapDataFile, Source.of(file))
         cdn.render(config, configSource)
         mapFactory = MapFactory(mapDataFile.mapId, cdn, mapDataFile, file)
-        limboUtils = LimboUtils(this, mapFactory)
+        limboControler = LimboControler(this, mapFactory)
+        limboControler.init()
         knockedCache = KnockedCache()
-        knockedFactory = KnockedFactory(this, limboUtils, config, knockedCache)
+        knockedFactory = KnockedFactory(this, limboControler, config, knockedCache)
         knockedCache.factory = knockedFactory
         registerListeners()
         getCommand("harakiri")?.setExecutor(HarakiriCmd(config = config, cache = knockedCache))
