@@ -7,6 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import pl.wolny.wolnynokaut.commands.HarakiriCmd
 import pl.wolny.wolnynokaut.knocked.KnockedCache
+import pl.wolny.wolnynokaut.knocked.KnockedControler
 
 import pl.wolny.wolnynokaut.knocked.KnockedFactory
 import pl.wolny.wolnynokaut.listeners.DamageListener
@@ -24,6 +25,7 @@ class WolnyNokaut : JavaPlugin() {
     private lateinit var knockedFactory: KnockedFactory
     private lateinit var knockedCache: KnockedCache
     private lateinit var config: NokautConfig
+    private lateinit var knockedControler: KnockedControler
     override fun onEnable() {
         // Plugin startup logic
         val file = File(this.dataFolder, "map_data.cdn")
@@ -53,6 +55,7 @@ class WolnyNokaut : JavaPlugin() {
         knockedCache = KnockedCache()
         knockedFactory = KnockedFactory(this, limboControler, config, knockedCache)
         knockedCache.factory = knockedFactory
+        knockedControler = knockedFactory.createControler()
         registerListeners()
         getCommand("harakiri")?.setExecutor(HarakiriCmd(config = config, cache = knockedCache))
     }
@@ -62,8 +65,8 @@ class WolnyNokaut : JavaPlugin() {
     }
     fun registerListeners(){
         val manager = Bukkit.getPluginManager()
-        manager.registerEvents(DeathListener(knockedCache, this), this)
-        manager.registerEvents(SneakListener(knockedCache), this)
+        manager.registerEvents(DeathListener(knockedCache, this, knockedControler), this)
+        manager.registerEvents(SneakListener(knockedCache, knockedControler), this)
         manager.registerEvents(DamageListener(knockedCache), this)
     }
 }

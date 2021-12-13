@@ -9,9 +9,10 @@ import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import pl.wolny.wolnynokaut.knocked.KnockedCache
+import pl.wolny.wolnynokaut.knocked.KnockedControler
 import pl.wolny.wolnynokaut.knocked.KnockedFactory
 
-class DeathListener(private val cache: KnockedCache, private val plugin: JavaPlugin) : Listener {
+class DeathListener(private val cache: KnockedCache, private val plugin: JavaPlugin, private val knockedControler: KnockedControler) : Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     fun onPlayerDeath(event: PlayerDeathEvent) {
@@ -32,7 +33,7 @@ class DeathListener(private val cache: KnockedCache, private val plugin: JavaPlu
         event.isCancelled = true
         val knockedPlayer = cache.factory.createKnockedPlayer(player)
         cache.knockedPlayers[player.uniqueId] = knockedPlayer
-        knockedPlayer.putOnGround()
+        knockedControler.putOnGround(knockedPlayer)
     }
 
 }

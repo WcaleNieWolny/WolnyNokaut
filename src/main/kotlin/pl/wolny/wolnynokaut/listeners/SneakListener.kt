@@ -9,9 +9,10 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import pl.wolny.wolnynokaut.knocked.KnockedCache
+import pl.wolny.wolnynokaut.knocked.KnockedControler
 import java.awt.Component
 
-class SneakListener(val knockedCache: KnockedCache) : Listener {
+class SneakListener(val knockedCache: KnockedCache, val knockedControler: KnockedControler) : Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     fun playerToggleSneakEvent(event: PlayerToggleSneakEvent){
         val player = event.player
@@ -27,6 +28,6 @@ class SneakListener(val knockedCache: KnockedCache) : Listener {
         if(nearbyPlayers.isEmpty()){
             return
         }
-        knockedCache[nearbyPlayers[0].uniqueId]!!.startRecovery(player)
+        knockedControler.startRecovery(player, knockedCache[nearbyPlayers[0].uniqueId]!!)
     }
 }

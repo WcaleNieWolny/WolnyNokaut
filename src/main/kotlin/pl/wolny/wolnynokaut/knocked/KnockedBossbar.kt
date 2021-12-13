@@ -82,7 +82,7 @@ class KnockedBossbar(val player: Player, val time: Float, val time2: Float, priv
         player.hideBossBar(dedBossBar)
         player.showBossBar(rescueBossBar)
     }
-    fun switchFoDed(){
+    fun switchForDed(){
         knockedBossbarState = KnockedBossbarState.DED
         timeRescueLeft = time2
         player.hideBossBar(rescueBossBar)
