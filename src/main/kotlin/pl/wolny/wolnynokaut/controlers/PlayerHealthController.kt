@@ -17,42 +17,5 @@ class PlayerHealthController(
     private val plugin: JavaPlugin,
     private val knockedController: KnockedController): Listener {
 
-    @EventHandler(priority = EventPriority.HIGH)
-    private fun onPlayerDeath(event: PlayerDeathEvent) {
-        val player = event.player
-        if (player.lastDamageCause!!.cause == EntityDamageEvent.DamageCause.VOID) {
-            return
-        }
-        val dataContainer = player.persistentDataContainer
-        val namespacedKey = NamespacedKey(plugin, "die_on_event")
-        val data = dataContainer.get(namespacedKey, PersistentDataType.BYTE)
-        data.apply {
-            if (data == (1).toByte()) {
-                dataContainer.set(namespacedKey, PersistentDataType.BYTE, 0)
-                return
-            }
-        }
-        if (player.vehicle != null) {
-            player.vehicle!!.removePassenger(player)
-        }
-        event.isCancelled = true
-        forcePlayerKnockout(player)
-    }
 
-    @EventHandler(priority = EventPriority.HIGH)
-    fun onPlayerDamage(event: EntityDamageEvent) {
-        if(event.entity !is Player){
-            return
-        }
-        val player = event.entity
-        if(cache[player.uniqueId] != null){
-            event.isCancelled = true
-        }
-    }
-
-    fun forcePlayerKnockout(player: Player){
-        val knockedPlayer = cache.factory.createKnockedPlayer(player)
-        cache.knockedPlayers[player.uniqueId] = knockedPlayer
-        knockedController.putOnGround(knockedPlayer)
-    }
 }
