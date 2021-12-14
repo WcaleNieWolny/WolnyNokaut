@@ -1,4 +1,3 @@
-
 package pl.wolny.junglenokaut.listeners;
 
 import org.bukkit.NamespacedKey;
@@ -13,21 +12,21 @@ import pl.wolny.junglenokaut.JungleNokaut;
 
 public class DismountListener implements Listener {
 
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onEntityDismount(EntityDismountEvent event) {
-    Entity entity = event.getEntity();
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onEntityDismount(EntityDismountEvent event) {
+        Entity entity = event.getEntity();
 
-    if (!(entity instanceof Player)) {
-      return;
+        if (!(entity instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) entity;
+
+        if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
+            return;
+        }
+
+        event.setCancelled(true);
+        //System.out.println(player.getName() + " cancel");
     }
-
-    Player player = (Player) entity;
-
-    if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
-      return;
-    }
-
-    event.setCancelled(true);
-    //System.out.println(player.getName() + " cancel");
-  }
 }

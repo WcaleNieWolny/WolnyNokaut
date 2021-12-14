@@ -4,7 +4,7 @@ main: pl.wolny.wolnynokaut.WolnyNokaut
 api-version: 1.18
 authors: [ WcaleNieWolny ]
 description: Knockaut - implementation without any packet bs
-depend: [ProtocolLib]
+depend: [ ProtocolLib ]
 commands:
   harakiri:
     description: Accepts death.

@@ -12,4 +12,5 @@ data class KnockedPlayer(val player: Player, val knockedBossbar: KnockedBossbar,
     var isTreated = false
     var internalTimer = false
 }
-enum class KnockedState{GROUND, PLAYER_HEAD}
+
+enum class KnockedState { GROUND, PLAYER_HEAD }

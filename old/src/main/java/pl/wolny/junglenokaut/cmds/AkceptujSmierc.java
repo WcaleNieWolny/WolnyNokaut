@@ -16,7 +16,7 @@ import pl.wolny.junglenokaut.JungleNokaut;
 public class AkceptujSmierc implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)){
+        if (!(sender instanceof Player)) {
             System.out.println("Nice try :)");
             return true;
         }
@@ -24,7 +24,7 @@ public class AkceptujSmierc implements CommandExecutor {
         Player executor = (Player) sender;
         PersistentDataContainer data = executor.getPersistentDataContainer();
 
-        if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0){
+        if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("AcceptDeathNo")));
             return true;
         }
@@ -32,8 +32,8 @@ public class AkceptujSmierc implements CommandExecutor {
         executor.setHealth(0);
         executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("AcceptDeathYes")));
 
-        if(executor.getVehicle() != null){
-            if(executor.getVehicle() instanceof Player){
+        if (executor.getVehicle() != null) {
+            if (executor.getVehicle() instanceof Player) {
                 ((Player) executor.getVehicle()).removePotionEffect(PotionEffectType.SLOW);
             }
         }

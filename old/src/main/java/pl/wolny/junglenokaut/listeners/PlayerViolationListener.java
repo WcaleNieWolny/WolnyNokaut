@@ -11,15 +11,15 @@ import org.bukkit.persistence.PersistentDataType;
 import pl.wolny.junglenokaut.JungleNokaut;
 
 public class PlayerViolationListener implements Listener {
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerViolation(PlayerViolationEvent event) {
-    Player player = event.getPlayer();
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerViolation(PlayerViolationEvent event) {
+        Player player = event.getPlayer();
 
-    if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
-      return;
+        if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
+            return;
+        }
+
+        event.setCancelled(true);
+        //player.sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
     }
-
-    event.setCancelled(true);
-    //player.sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-  }
 }

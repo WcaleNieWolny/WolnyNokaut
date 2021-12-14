@@ -31,42 +31,42 @@ public class PodniesGracza implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)){
+        if (!(sender instanceof Player)) {
             System.out.println("Nice try :)");
             return true;
         }
 
         Player executor = (Player) sender;
 
-        if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
+        if (!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("DisableCMD")));
             return true;
         }
 
-        if(executor.getPassengers().size() != 0){
+        if (executor.getPassengers().size() != 0) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("CanNotDoThat")));
         }
 
         //PersistentDataContainer ExecutorData = executor.getPersistentDataContainer();
         List<Entity> nearbyEntites = (List<Entity>) executor.getWorld().getNearbyEntities(executor.getLocation(), 1, 3, 1);
-        if(nearbyEntites.size() == 0){
+        if (nearbyEntites.size() == 0) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("CanNotPickupYourSelf")));
             return true;
         }
 
         List<Player> players = new ArrayList<>();
-        for (Entity entity: nearbyEntites) {
-            if(entity instanceof Player){
+        for (Entity entity : nearbyEntites) {
+            if (entity instanceof Player) {
                 players.add((Player) entity);
             }
         }
 
         players.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1);
-        if(players.contains(executor)){
+        if (players.contains(executor)) {
             players.remove(executor);
         }
 
-        if(players.size() != 1){
+        if (players.size() != 1) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("CanNotPickupYourSelf")));
             return true;
         }
@@ -83,11 +83,9 @@ public class PodniesGracza implements CommandExecutor {
         KnockedEntity.playerInteractManager.setGameMode(EnumGamemode.ADVENTURE);
         //sendGameState(knocked, executor);
         String PickupForUser = JungleNokaut.getConfigData().getString("PickupForUser");
-        new BukkitRunnable()
-        {
-            public void run()
-            {
-                if(KnockedData.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3){
+        new BukkitRunnable() {
+            public void run() {
+                if (KnockedData.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
                     this.cancel();
                     return;
                 }
@@ -114,6 +112,7 @@ public class PodniesGracza implements CommandExecutor {
         return true;
 
     }
+
     public void sendGameState(Player player, Player player2) {
         CraftPlayer craftPlayer = (CraftPlayer) player;
         EntityPlayer entityPlayer = craftPlayer.getHandle();

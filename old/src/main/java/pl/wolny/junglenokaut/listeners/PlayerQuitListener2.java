@@ -16,55 +16,55 @@ import pl.wolny.junglenokaut.JungleNokaut;
 
 public class PlayerQuitListener2 implements Listener {
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerQuit(PlayerQuitEvent event) {
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerQuit(PlayerQuitEvent event) {
 
-    Player player = event.getPlayer();
-    player.removePotionEffect(PotionEffectType.SLOW);
-    checkVehicle(player);
+        Player player = event.getPlayer();
+        player.removePotionEffect(PotionEffectType.SLOW);
+        checkVehicle(player);
 
-    PersistentDataContainer data = player.getPersistentDataContainer();
-    if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
-      player.setGameMode(GameMode.SURVIVAL);
-      player.setWalkSpeed(0.2f);
-      player.setHealth(0);
-      player.setInvisible(false);
-      player.removePotionEffect(PotionEffectType.BLINDNESS);
-      data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
-      //System.out.println("quit " + event.getPlayer().getName());
-    }
-  }
-
-  @EventHandler(priority = EventPriority.HIGHEST)
-  public void onPlayerKick(PlayerKickEvent event) {
-
-    if (event.getReason().equals("Cannot interact with self!")) {
-      event.setCancelled(true);
-      return;
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
+            player.setGameMode(GameMode.SURVIVAL);
+            player.setWalkSpeed(0.2f);
+            player.setHealth(0);
+            player.setInvisible(false);
+            player.removePotionEffect(PotionEffectType.BLINDNESS);
+            data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
+            //System.out.println("quit " + event.getPlayer().getName());
+        }
     }
 
-    Player player = event.getPlayer();
-    player.removePotionEffect(PotionEffectType.SLOW);
-    checkVehicle(player);
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerKick(PlayerKickEvent event) {
 
-    PersistentDataContainer data = player.getPersistentDataContainer();
-    if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
-      player.setGameMode(GameMode.SURVIVAL);
-      player.setWalkSpeed(0.2f);
-      player.setHealth(0);
-      player.setInvisible(false);
-      player.removePotionEffect(PotionEffectType.BLINDNESS);
-      data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
-      //System.out.println("quit " + event.getPlayer().getName());
+        if (event.getReason().equals("Cannot interact with self!")) {
+            event.setCancelled(true);
+            return;
+        }
+
+        Player player = event.getPlayer();
+        player.removePotionEffect(PotionEffectType.SLOW);
+        checkVehicle(player);
+
+        PersistentDataContainer data = player.getPersistentDataContainer();
+        if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
+            player.setGameMode(GameMode.SURVIVAL);
+            player.setWalkSpeed(0.2f);
+            player.setHealth(0);
+            player.setInvisible(false);
+            player.removePotionEffect(PotionEffectType.BLINDNESS);
+            data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 0);
+            //System.out.println("quit " + event.getPlayer().getName());
+        }
     }
-  }
 
-  private void checkVehicle(Player player) {
-    Entity vehicle = player.getVehicle();
+    private void checkVehicle(Player player) {
+        Entity vehicle = player.getVehicle();
 
-    if (vehicle == null) return;
-    if (!(vehicle instanceof Player)) return;
+        if (vehicle == null) return;
+        if (!(vehicle instanceof Player)) return;
 
-    ((Player) vehicle).removePotionEffect(PotionEffectType.SLOW);
-  }
+        ((Player) vehicle).removePotionEffect(PotionEffectType.SLOW);
+    }
 }

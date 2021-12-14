@@ -25,25 +25,25 @@ import pl.wolny.junglenokaut.utilities.TimeSystem;
 public class RzucGracza implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if(!(sender instanceof Player)){
+        if (!(sender instanceof Player)) {
             System.out.println("Nice try :)");
             return true;
         }
 
         Player executor = (Player) sender;
-        if(!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))){
+        if (!(JungleNokaut.getMain().getConfig().getBoolean("PickupModule"))) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("DisableCMD")));
             return true;
         }
 
-        if(executor.getPassengers().size() != 1){
+        if (executor.getPassengers().size() != 1) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("NoPlayerToDrop")));
             return true;
         }
 
         Entity toDropEnt = executor.getPassengers().get(0);
 
-        if(!(toDropEnt instanceof  Player)) {
+        if (!(toDropEnt instanceof Player)) {
             executor.sendMessage(ChatColor.translateAlternateColorCodes('&', JungleNokaut.getConfigData().getString("NoPlayerToDrop")));
             return true;
         }
@@ -69,17 +69,15 @@ public class RzucGracza implements CommandExecutor {
         String KnockedLine1 = JungleNokaut.getConfigData().getString("KnockedLine1");
         String KnockedLine2 = JungleNokaut.getConfigData().getString("KnockedLine2");
 
-        new BukkitRunnable()
-        {
-            public void run()
-            {
-                if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1){
+        new BukkitRunnable() {
+            public void run() {
+                if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1) {
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER, TitleStatus[0]);
                     this.cancel();
                     return;
                 }
 
-                if(TitleStatus[0] == 0){
+                if (TitleStatus[0] == 0) {
                     toDrop.setGameMode(GameMode.SURVIVAL);
                     toDrop.setWalkSpeed(0.2f);
                     toDrop.setHealth(0);
