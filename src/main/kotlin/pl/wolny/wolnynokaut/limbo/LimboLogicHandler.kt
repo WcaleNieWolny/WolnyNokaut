@@ -12,7 +12,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.java.JavaPlugin
 
-class LimboLogicHandler(val plugin: JavaPlugin, val slotMap: MutableMap<Player, Int>) {
+class LimboLogicHandler(private val plugin: JavaPlugin, private val slotMap: MutableMap<Player, Int>) {
     private val protocolManager = ProtocolLibrary.getProtocolManager()
     fun handle(event: PacketEvent): Boolean {
         when (event.packet.type) {
@@ -76,7 +76,7 @@ class LimboLogicHandler(val plugin: JavaPlugin, val slotMap: MutableMap<Player, 
         event.packet.watchableCollectionModifier.write(0, watchableCollection)
     }
 
-    private fun handleSlotEvent(event: PacketEvent) {
+    fun handleSlotEvent(event: PacketEvent) {
         if (slotMap.contains(event.player)) {
             event.isCancelled = true
             sendSlotPacket(event.player, slotMap[event.player]!!)

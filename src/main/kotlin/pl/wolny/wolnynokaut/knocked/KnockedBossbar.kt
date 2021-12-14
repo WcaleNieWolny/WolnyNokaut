@@ -10,9 +10,9 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.math.roundToInt
 
 class KnockedBossbar(val player: Player, val time: Float, val time2: Float, private val plugin: JavaPlugin) {
-    var timeDedLeft = time + 1
-    var timeRescueLeft = time2 + 1
-    var running = false
+    private var timeDedLeft = time + 1
+    private var timeRescueLeft = time2 + 1
+    private var running = false
     private val dedBossBar: BossBar = BossBar.bossBar(
         Component.text()
             .content("NOKAUT: $timeDedLeft")

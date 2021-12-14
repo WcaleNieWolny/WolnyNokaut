@@ -12,9 +12,6 @@ import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.knocked.KnockedController
 import pl.wolny.wolnynokaut.knocked.KnockedFactory
 import pl.wolny.wolnynokaut.limbo.LimboController
-import pl.wolny.wolnynokaut.listeners.DamageListener
-import pl.wolny.wolnynokaut.listeners.DeathListener
-import pl.wolny.wolnynokaut.listeners.SneakListener
 import pl.wolny.wolnynokaut.map.MapDataFile
 import pl.wolny.wolnynokaut.map.MapFactory
 import java.io.File

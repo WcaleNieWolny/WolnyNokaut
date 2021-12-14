@@ -21,9 +21,9 @@ import kotlin.math.pow
 import kotlin.math.sqrt
 
 class KnockedController(
-    val plugin: JavaPlugin,
-    val limboController: LimboController,
-    val cache: KnockedCache,
+    private val plugin: JavaPlugin,
+    private val limboController: LimboController,
+    private val cache: KnockedCache,
 ) {
     private fun getTimeRunnable(knockedPlayer: KnockedPlayer): BukkitRunnable = object : BukkitRunnable() {
         override fun run() {

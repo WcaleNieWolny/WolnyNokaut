@@ -14,55 +14,21 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import pl.wolny.wolnynokaut.limbo.adapters.LimboGeneralPacketAdapter
+import pl.wolny.wolnynokaut.limbo.adapters.LimboMetaDataAdapter
+import pl.wolny.wolnynokaut.limbo.adapters.LimboSetSlotAdapter
 import pl.wolny.wolnynokaut.map.MapFactory
 
 
-class LimboController(val plugin: JavaPlugin, private val mapFactory: MapFactory) {
-    private val limboList = mutableListOf<Player>()
-    private val slotMap = mutableMapOf<Player, Int>()
+class LimboController(private val plugin: JavaPlugin, private val mapFactory: MapFactory) {
+    val limboList = mutableListOf<Player>()
+    val slotMap = mutableMapOf<Player, Int>()
     val limboLogicHandler: LimboLogicHandler = LimboLogicHandler(plugin, slotMap)
     fun init() {
         val protocolManager = ProtocolLibrary.getProtocolManager()
-        protocolManager.addPacketListener(
-            object : PacketAdapter(
-                plugin, ListenerPriority.HIGHEST,
-                PacketType.values().filter { a -> a.isClient }
-            ) {
-                override fun onPacketReceiving(event: PacketEvent?) {
-                    if (event != null) {
-                        if (limboList.contains(event.player)) {
-                            event.isCancelled = limboLogicHandler.handle(event)
-                        }
-                    }
-                }
-            })
-        protocolManager.addPacketListener(
-            object : PacketAdapter(
-                plugin, ListenerPriority.NORMAL,
-                PacketType.Play.Server.SET_SLOT
-            ) {
-                override fun onPacketSending(event: PacketEvent?) {
-                    if (event != null) {
-                        limboLogicHandler.handleDigEvent(event)
-                    }
-                }
-            })
-        protocolManager.addPacketListener(
-            object : PacketAdapter(
-                plugin, ListenerPriority.HIGHEST,
-                PacketType.Play.Server.ENTITY_METADATA
-            ) {
-                override fun onPacketSending(event: PacketEvent?) {
-                    if (event != null) {
-                        if (limboList.any { it.entityId == event.packet.integers.read(0) }) {
-                            limboLogicHandler.handleMetaData(event)
-                        }
-                    } else {
-                        throw (RuntimeException("Packet event is null?"))
-                    }
-                }
-
-            })
+        protocolManager.addPacketListener(LimboGeneralPacketAdapter(plugin, this))
+        protocolManager.addPacketListener(LimboSetSlotAdapter(plugin, this))
+        protocolManager.addPacketListener(LimboMetaDataAdapter(plugin, this))
     }
 
     fun setInLimbo(player: Player) {

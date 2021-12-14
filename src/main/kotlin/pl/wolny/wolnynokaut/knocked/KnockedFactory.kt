@@ -8,8 +8,8 @@ import pl.wolny.wolnynokaut.limbo.LimboController
 class KnockedFactory(
     private val plugin: JavaPlugin,
     private val limboController: LimboController,
-    val nokautConfig: NokautConfig,
-    val cache: KnockedCache
+    private val nokautConfig: NokautConfig,
+    private val cache: KnockedCache
 ) {
     fun createKnockedPlayer(player: Player): KnockedPlayer =
         KnockedPlayer(
@@ -28,9 +28,5 @@ class KnockedFactory(
             plugin = plugin,
             limboController = limboController,
             cache = cache,
-            healXP = nokautConfig.healXP,
-            resuscitationForHeal2 = nokautConfig.resuscitationForHeal2,
-            resuscitationForHeal1 = nokautConfig.resuscitationForHeal1,
-            treatmentTime = nokautConfig.treatmentTime
         )
 }
