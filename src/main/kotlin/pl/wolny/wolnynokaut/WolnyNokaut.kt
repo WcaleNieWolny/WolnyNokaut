@@ -6,6 +6,8 @@ import net.dzikoysk.cdn.source.Source
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import pl.wolny.wolnynokaut.commands.HarakiriCommand
+import pl.wolny.wolnynokaut.controlers.PlayerHealthController
+import pl.wolny.wolnynokaut.controlers.RescueController
 import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.knocked.KnockedController
 import pl.wolny.wolnynokaut.knocked.KnockedFactory
@@ -25,6 +27,8 @@ class WolnyNokaut : JavaPlugin() {
     private lateinit var knockedCache: KnockedCache
     private lateinit var config: NokautConfig
     private lateinit var knockedController: KnockedController
+    private lateinit var playerHealthController: PlayerHealthController
+    private lateinit var rescueController: RescueController
     override fun onEnable() {
         // Plugin startup logic
         val file = File(this.dataFolder, "map_data.cdn")
@@ -55,8 +59,12 @@ class WolnyNokaut : JavaPlugin() {
         knockedFactory = KnockedFactory(this, limboController, config, knockedCache)
         knockedCache.factory = knockedFactory
         knockedController = knockedFactory.createControler()
+        playerHealthController = PlayerHealthController(cache = knockedCache, plugin = this, knockedController = knockedController)
+        rescueController = RescueController(
+            knockedController, config.healXP, config.resuscitationForHeal1,
+            config.resuscitationForHeal2, config.treatmentTime, this, knockedCache)
         registerListeners()
-        getCommand("harakiri")?.setExecutor(HarakiriCommand(config = config, cache = knockedCache))
+        getCommand("harakiri")?.setExecutor(HarakiriCommand(knockedCache, knockedController, config.notAllowed, config.harakiriDisallow, config.harakiriPermit))
     }
 
     override fun onDisable() {
@@ -65,8 +73,7 @@ class WolnyNokaut : JavaPlugin() {
 
     fun registerListeners() {
         val manager = Bukkit.getPluginManager()
-        manager.registerEvents(DeathListener(knockedCache, this, knockedController), this)
-        manager.registerEvents(SneakListener(knockedCache, knockedController), this)
-        manager.registerEvents(DamageListener(knockedCache), this)
+        manager.registerEvents(playerHealthController, this)
+        manager.registerEvents(rescueController, this)
     }
 }

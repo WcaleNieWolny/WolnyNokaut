@@ -46,10 +46,7 @@ class RescueController(private val knockedController: KnockedController,
                     this.cancel()
                 }
                 //
-                if (!medic.isSneaking || !medic.isOnline || medic.totalExperience < healXP || distance(
-                        knockedPlayer.player.location,
-                        medic.location
-                    ) >= 1.25
+                if (!medic.isSneaking || !medic.isOnline || medic.totalExperience < healXP || knockedPlayer.player.location.distance(medic.location) >= 1.25
                 ) {
                     this.cancel()
                     knockedController.startInternalTimers(knockedPlayer)
@@ -88,8 +85,6 @@ class RescueController(private val knockedController: KnockedController,
         }
         runnable.runTaskTimer(plugin, 0, 5)
     }
-    fun distance(location1: Location, location2: Location): Double =
-        sqrt((location1.x - location2.x).pow(2) + (location1.y - location2.y).pow(2) + (location1.z - location2.z).pow(2))
 
     @EventHandler(priority = EventPriority.MONITOR)
     fun playerToggleSneakEvent(event: PlayerToggleSneakEvent) {
