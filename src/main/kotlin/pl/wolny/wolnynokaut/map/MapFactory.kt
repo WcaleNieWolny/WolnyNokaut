@@ -20,9 +20,14 @@ class MapFactory(
     private val file: File
 ) {
     private val inputSteam = ImageUtils.loadInputStream("ded.png")
-    fun generateMap(world: World, player: Player) {
+    fun generateMap(player: Player) {
+        val map = generateMapItem(player)
+        player.inventory.setItem(0, map)
+        player.sendMap((map.itemMeta as MapMeta).mapView!!)
+    }
+    fun generateMapItem(player: Player): ItemStack {
         val map: MapView = if (id == -1) {
-            Bukkit.createMap(world)
+            Bukkit.createMap(player.world)
         } else {
             Bukkit.getMap(id)!!
         }
@@ -38,7 +43,6 @@ class MapFactory(
         val meta: MapMeta = i.itemMeta as MapMeta
         meta.mapView = map
         i.itemMeta = meta
-        player.inventory.setItem(4, i)
-        player.sendMap(map)
+        return i
     }
 }

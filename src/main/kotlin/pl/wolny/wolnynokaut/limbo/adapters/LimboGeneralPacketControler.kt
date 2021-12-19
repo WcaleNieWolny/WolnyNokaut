@@ -1,23 +1,39 @@
-package pl.wolny.wolnynokaut.limbo
+package pl.wolny.wolnynokaut.limbo.adapters
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.events.ListenerPriority
+import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketContainer
 import com.comphenix.protocol.events.PacketEvent
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.WrappedBlockData
-import com.comphenix.protocol.wrappers.WrappedDataWatcher
-import com.comphenix.protocol.wrappers.WrappedWatchableObject
 import org.bukkit.Bukkit
+import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import pl.wolny.wolnynokaut.limbo.LimboController
+import pl.wolny.wolnynokaut.map.MapFactory
 
-class LimboLogicHandler(private val plugin: JavaPlugin, private val slotMap: MutableMap<Player, Int>) {
-    private val protocolManager = ProtocolLibrary.getProtocolManager()
+class LimboGeneralPacketControler(private val plugin: JavaPlugin, private val limboController: LimboController, private val slotMap: MutableMap<Player, Int>, private val mapFactory: MapFactory) : PacketAdapter(
+    plugin,
+    ListenerPriority.HIGHEST,
+    PacketType.values().filter { a -> a.isClient }) {
+    override fun onPacketReceiving(event: PacketEvent?) {
+        if (event != null) {
+            if (limboController.limboList.contains(event.player)) {
+                event.isCancelled = handle(event)
+            }
+        }
+    }
     fun handle(event: PacketEvent): Boolean {
         when (event.packet.type) {
             PacketType.Play.Client.KEEP_ALIVE -> {
                 return false
+            }
+            PacketType.Play.Client.WINDOW_CLICK -> {
+                handleSlotClick(event.player)
             }
             PacketType.Play.Client.CHAT -> return false
             PacketType.Play.Client.POSITION -> {
@@ -43,46 +59,6 @@ class LimboLogicHandler(private val plugin: JavaPlugin, private val slotMap: Mut
         }
         return true
     }
-
-    fun handleDigEvent(event: PacketEvent) {
-        val enum = event.packet.playerDigTypes.read(0)
-        if (enum == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK || enum == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
-            val location = event.packet.blockPositionModifier.read(0)
-            Bukkit.getServer().scheduler.scheduleSyncDelayedTask(plugin, {
-                val packet = PacketContainer(PacketType.Play.Server.BLOCK_CHANGE)
-                packet.blockPositionModifier.write(0, location)
-                val block = event.player.world.getBlockAt(location.x, location.y, location.z)
-                val wrappedBlock = WrappedBlockData.createData(block.type)
-                packet.blockData.write(0, wrappedBlock)
-                protocolManager.sendServerPacket(event.player, packet)
-            }, 0)
-        }
-    }
-
-    fun handleMetaData(event: PacketEvent) {
-        val pose = EnumWrappers.EntityPose.SWIMMING
-        val serializer = WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass())
-        val watchableCollection: MutableList<WrappedWatchableObject> =
-            event.packet.watchableCollectionModifier!!.read(0)
-        if (watchableCollection.size < 6) {
-            return
-        }
-        watchableCollection[6] = WrappedWatchableObject(
-            WrappedDataWatcher.WrappedDataWatcherObject(
-                6,
-                serializer
-            ), pose.toNms()
-        )
-        event.packet.watchableCollectionModifier.write(0, watchableCollection)
-    }
-
-    fun handleSlotEvent(event: PacketEvent) {
-        if (slotMap.contains(event.player)) {
-            event.isCancelled = true
-            sendSlotPacket(event.player, slotMap[event.player]!!)
-        }
-    }
-
     private fun sendPositionPacket(player: Player) {
         val packet = PacketContainer(PacketType.Play.Server.POSITION)
         packet.modifier.writeDefaults()
@@ -98,5 +74,31 @@ class LimboLogicHandler(private val plugin: JavaPlugin, private val slotMap: Mut
         val packet = PacketContainer(PacketType.Play.Server.HELD_ITEM_SLOT)
         packet.integers.write(0, int)
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
+    }
+    fun handleSlotClick(player: Player){
+        val packet = PacketContainer(PacketType.Play.Server.SET_SLOT)
+        packet.integers.write(0, -99)
+        packet.integers.write(1, -1)
+        packet.itemModifier.write(0, ItemStack(Material.AIR, 1))
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
+        val packet2 = PacketContainer(PacketType.Play.Server.SET_SLOT)
+        packet2.integers.write(0, -88)
+        packet2.integers.write(1, Int.MAX_VALUE)
+        packet2.itemModifier.write(0, mapFactory.generateMapItem(player))
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet2)
+    }
+    fun handleDigEvent(event: PacketEvent) {
+        val enum = event.packet.playerDigTypes.read(0)
+        if (enum == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK || enum == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
+            val location = event.packet.blockPositionModifier.read(0)
+            Bukkit.getServer().scheduler.scheduleSyncDelayedTask(plugin, {
+                val packet = PacketContainer(PacketType.Play.Server.BLOCK_CHANGE)
+                packet.blockPositionModifier.write(0, location)
+                val block = event.player.world.getBlockAt(location.x, location.y, location.z)
+                val wrappedBlock = WrappedBlockData.createData(block.type)
+                packet.blockData.write(0, wrappedBlock)
+                ProtocolLibrary.getProtocolManager().sendServerPacket(event.player, packet)
+            }, 0)
+        }
     }
 }

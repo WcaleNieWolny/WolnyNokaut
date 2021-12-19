@@ -2,10 +2,7 @@ package pl.wolny.wolnynokaut.limbo
 
 import com.comphenix.protocol.PacketType
 import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.events.ListenerPriority
-import com.comphenix.protocol.events.PacketAdapter
 import com.comphenix.protocol.events.PacketContainer
-import com.comphenix.protocol.events.PacketEvent
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.EnumWrappers.EntityPose
 import com.comphenix.protocol.wrappers.WrappedDataWatcher
@@ -14,20 +11,21 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import pl.wolny.wolnynokaut.limbo.adapters.LimboGeneralPacketAdapter
+import pl.wolny.wolnynokaut.limbo.adapters.LimboGeneralPacketControler
 import pl.wolny.wolnynokaut.limbo.adapters.LimboMetaDataAdapter
-import pl.wolny.wolnynokaut.limbo.adapters.LimboSetSlotAdapter
+import pl.wolny.wolnynokaut.limbo.adapters.LimboSetSlotServerAdapter
+
 import pl.wolny.wolnynokaut.map.MapFactory
 
 
 class LimboController(private val plugin: JavaPlugin, private val mapFactory: MapFactory) {
     val limboList = mutableListOf<Player>()
     val slotMap = mutableMapOf<Player, Int>()
-    val limboLogicHandler: LimboLogicHandler = LimboLogicHandler(plugin, slotMap)
+    private val generalController = LimboGeneralPacketControler(plugin, this, slotMap, mapFactory)
     fun init() {
         val protocolManager = ProtocolLibrary.getProtocolManager()
-        protocolManager.addPacketListener(LimboGeneralPacketAdapter(plugin, this))
-        protocolManager.addPacketListener(LimboSetSlotAdapter(plugin, this))
+        protocolManager.addPacketListener(generalController)
+        protocolManager.addPacketListener(LimboSetSlotServerAdapter(plugin, slotMap))
         protocolManager.addPacketListener(LimboMetaDataAdapter(plugin, this))
     }
 
@@ -35,11 +33,11 @@ class LimboController(private val plugin: JavaPlugin, private val mapFactory: Ma
         val playerInv: MutableMap<Int, ItemStack?> = mutableMapOf()
         getPlayerInventoryHashMap(player, playerInv)
         player.inventory.clear()
-        mapFactory.generateMap(player.world, player)
+        mapFactory.generateMap(player)
         player.updateInventory()
         limboList.add(player)
-        slotMap[player] = 4
-        limboLogicHandler.sendSlotPacket(player, 4)
+        slotMap[player] = 0
+        generalController.sendSlotPacket(player, 4)
         player.inventory.clear()
         giveBackPlayerInventory(player, playerInv)
     }

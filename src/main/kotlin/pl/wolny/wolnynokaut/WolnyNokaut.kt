@@ -6,7 +6,7 @@ import net.dzikoysk.cdn.source.Source
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import pl.wolny.wolnynokaut.commands.HarakiriCommand
-import pl.wolny.wolnynokaut.controlers.PlayerHealthController
+import pl.wolny.wolnynokaut.controlers.InventoryController
 import pl.wolny.wolnynokaut.controlers.RescueController
 import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.knocked.KnockedController
@@ -24,15 +24,15 @@ class WolnyNokaut : JavaPlugin() {
     private lateinit var knockedCache: KnockedCache
     private lateinit var config: NokautConfig
     private lateinit var knockedController: KnockedController
-    private lateinit var playerHealthController: PlayerHealthController
     private lateinit var rescueController: RescueController
+    private lateinit var inventoryController: InventoryController
     override fun onEnable() {
         // Plugin startup logic
         val file = File(this.dataFolder, "map_data.cdn")
         val cdn = KCdnFactory.createYamlLike()
         val mapSource = Source.of(file)
         val mapDataFileResult = cdn.loadAs<MapDataFile>(mapSource)
-        if (!mapDataFileResult.isErr) {
+        if (mapDataFileResult.isErr) {
             logger.info("Map data file error: ${mapDataFileResult.error}")
             pluginLoader.disablePlugin(this)
             return
@@ -56,10 +56,10 @@ class WolnyNokaut : JavaPlugin() {
         knockedFactory = KnockedFactory(this, limboController, config, knockedCache)
         knockedCache.factory = knockedFactory
         knockedController = knockedFactory.createControler()
-        playerHealthController = PlayerHealthController(cache = knockedCache, plugin = this, knockedController = knockedController)
         rescueController = RescueController(
             knockedController, config.healXP, config.resuscitationForHeal1,
             config.resuscitationForHeal2, config.treatmentTime, this, knockedCache)
+        inventoryController = InventoryController(cache = knockedCache)
         registerListeners()
         getCommand("harakiri")?.setExecutor(HarakiriCommand(knockedCache, knockedController, config.notAllowed, config.harakiriDisallow, config.harakiriPermit))
     }
@@ -70,7 +70,8 @@ class WolnyNokaut : JavaPlugin() {
 
     fun registerListeners() {
         val manager = Bukkit.getPluginManager()
-        manager.registerEvents(playerHealthController, this)
+        manager.registerEvents(inventoryController, this)
         manager.registerEvents(rescueController, this)
+        manager.registerEvents(knockedController, this)
     }
 }
