@@ -1,7 +1,6 @@
 package pl.wolny.wolnynokaut.map
 
 import net.dzikoysk.cdn.Cdn
-import net.dzikoysk.cdn.source.Output
 import net.dzikoysk.cdn.source.Source
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -14,13 +13,25 @@ import pl.wolny.wolnynokaut.utils.ImageUtils
 import java.io.File
 
 
-class MapFactory(private var id: Int, private val cdn: Cdn, private val mapDataFile: MapDataFile, private val file: File) {
+class MapFactory(
+    private var id: Int,
+    private val cdn: Cdn,
+    private val mapDataFile: MapDataFile,
+    private val file: File
+) {
     private val inputSteam = ImageUtils.loadInputStream("ded.png")
-    fun generateMap(world: World, player: Player){
-        val map: MapView = if(id == -1){
-            Bukkit.createMap(world)
-        }else{ Bukkit.getMap(id)!!}
-        if(id == -1){
+    fun generateMap(player: Player) {
+        val map = generateMapItem(player)
+        player.inventory.setItem(0, map)
+        player.sendMap((map.itemMeta as MapMeta).mapView!!)
+    }
+    fun generateMapItem(player: Player): ItemStack {
+        val map: MapView = if (id == -1) {
+            Bukkit.createMap(player.world)
+        } else {
+            Bukkit.getMap(id)!!
+        }
+        if (id == -1) {
             id = map.id
             mapDataFile.mapId = id
             cdn.render(mapDataFile, Source.of(file))
@@ -32,7 +43,6 @@ class MapFactory(private var id: Int, private val cdn: Cdn, private val mapDataF
         val meta: MapMeta = i.itemMeta as MapMeta
         meta.mapView = map
         i.itemMeta = meta
-        player.inventory.setItem(4, i)
-        player.sendMap(map)
+        return i
     }
 }

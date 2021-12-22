@@ -8,10 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HidePlayer {
-    public static void hide(Player player){
+    public static void hide(Player player) {
         List<Player> list = new ArrayList<>(Bukkit.getOnlinePlayers());
         list.remove(player);
-        for (Player ListPlayer: list) {
+        for (Player ListPlayer : list) {
             ListPlayer.hidePlayer(JungleNokaut.getMain(), player);
         }
     }

@@ -14,38 +14,38 @@ import org.bukkit.persistence.PersistentDataType;
 import pl.wolny.junglenokaut.JungleNokaut;
 
 public class PathFindingListener implements Listener {
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
-    LivingEntity target = event.getTarget();
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityTargetLivingEntity(EntityTargetLivingEntityEvent event) {
+        LivingEntity target = event.getTarget();
 
-    if (!(target instanceof Player)) {
-      return;
+        if (!(target instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) target;
+
+        if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 
-    Player player = (Player) target;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
+        Entity entity = event.getEntity();
 
-    if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
-      return;
+        if (!(damager instanceof Monster && entity instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) entity;
+
+        if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
+            return;
+        }
+
+        ((Monster) damager).setTarget(null);
     }
-
-    event.setCancelled(true);
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-    Entity damager = event.getDamager();
-    Entity entity = event.getEntity();
-
-    if (!(damager instanceof Monster && entity instanceof Player)) {
-      return;
-    }
-
-    Player player = (Player) entity;
-
-    if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0) {
-      return;
-    }
-
-    ((Monster) damager).setTarget(null);
-  }
 }

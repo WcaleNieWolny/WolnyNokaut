@@ -15,29 +15,29 @@ import java.util.List;
 
 public class ChunkLoadListener implements Listener {
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onChunkLoad(org.bukkit.event.world.ChunkLoadEvent event) {
-    Chunk chunk = event.getChunk();
-    List<Player> players = new ArrayList<>();
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onChunkLoad(org.bukkit.event.world.ChunkLoadEvent event) {
+        Chunk chunk = event.getChunk();
+        List<Player> players = new ArrayList<>();
 
-    for (Entity entity : chunk.getEntities()) {
-      if (entity instanceof Player) {
-        players.add((Player) entity);
-      }
-    }
+        for (Entity entity : chunk.getEntities()) {
+            if (entity instanceof Player) {
+                players.add((Player) entity);
+            }
+        }
 
-    if (players.size() < 1) {
-      return;
-    }
+        if (players.size() < 1) {
+            return;
+        }
 
-    for (Player player : players) {
-      if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
-        players.remove(player);
-      }
-    }
+        for (Player player : players) {
+            if (player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 0) {
+                players.remove(player);
+            }
+        }
 
-    for (Player player : players) {
-      //GenerateFakePlayer.gen(ListPlayer, ListPlayer, ListPlayer.getLocation());
+        for (Player player : players) {
+            //GenerateFakePlayer.gen(ListPlayer, ListPlayer, ListPlayer.getLocation());
+        }
     }
-  }
 }

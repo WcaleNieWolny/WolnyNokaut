@@ -4,7 +4,7 @@ main: pl.wolny.junglenokaut.JungleNokaut
 api-version: 1.16
 author: WcaleNieWolny
 description: Nokaut pisany na zlecenie.
-softdepend: [Matrix]
+softdepend: [ Matrix ]
 commands:
   akceptujsmierc:
     description: Akceptuje śmierć.

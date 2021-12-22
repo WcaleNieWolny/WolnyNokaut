@@ -14,7 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import pl.wolny.junglenokaut.JungleNokaut;
 
 public class DropPlayer {
-    public static void drop(Player toDrop, Player root){
+    public static void drop(Player toDrop, Player root) {
         PersistentDataContainer data = toDrop.getPersistentDataContainer();
         data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 10);
         root.removePassenger(root.getPassengers().get(0));
@@ -30,19 +30,17 @@ public class DropPlayer {
         String KnockedLine1 = JungleNokaut.getMain().getConfig().getString("KnockedLine1");
         String KnockedLine2 = JungleNokaut.getMain().getConfig().getString("KnockedLine2");
         int[] TitleStatus = {data.get(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER)};
-        new BukkitRunnable()
-        {
-            public void run()
-            {
-                if(data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1){
+        new BukkitRunnable() {
+            public void run() {
+                if (data.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 1) {
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokInt"), PersistentDataType.INTEGER, TitleStatus[0]);
                     this.cancel();
                     return;
                 }
-                if(!toDrop.isOnline()){
+                if (!toDrop.isOnline()) {
                     data.set(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER, 6);
                 }
-                if(TitleStatus[0] == 0){
+                if (TitleStatus[0] == 0) {
                     toDrop.setGameMode(GameMode.SURVIVAL);
                     toDrop.setWalkSpeed(0.2f);
                     toDrop.setHealth(0);

@@ -14,47 +14,47 @@ import pl.wolny.junglenokaut.utilities.DropPlayer;
 
 public class PlayerQuitListener implements Listener {
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerQuit(PlayerQuitEvent event) {
-    Player player = event.getPlayer();
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
 
-    if (player.getPassengers().size() == 0){
-      return;
+        if (player.getPassengers().size() == 0) {
+            return;
+        }
+
+        if (!(player.getPassengers().get(0) instanceof Player)) {
+            return;
+        }
+
+        Player toDrop = (Player) player.getPassengers().get(0);
+        PersistentDataContainer dataContainer = toDrop.getPersistentDataContainer();
+
+        if (dataContainer.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
+            return;
+        }
+
+        DropPlayer.drop(toDrop, player);
     }
 
-    if (!(player.getPassengers().get(0) instanceof Player)) {
-      return;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerKick(PlayerKickEvent event) {
+        Player player = event.getPlayer();
+
+        if (player.getPassengers().size() == 0) {
+            return;
+        }
+
+        if (!(player.getPassengers().get(0) instanceof Player)) {
+            return;
+        }
+
+        Player toDrop = (Player) player.getPassengers().get(0);
+        PersistentDataContainer dataContainer = toDrop.getPersistentDataContainer();
+
+        if (dataContainer.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
+            return;
+        }
+
+        DropPlayer.drop(toDrop, player);
     }
-
-    Player toDrop = (Player) player.getPassengers().get(0);
-    PersistentDataContainer dataContainer = toDrop.getPersistentDataContainer();
-
-    if (dataContainer.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
-      return;
-    }
-
-    DropPlayer.drop(toDrop, player);
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerKick(PlayerKickEvent event) {
-    Player player = event.getPlayer();
-
-    if (player.getPassengers().size() == 0) {
-      return;
-    }
-
-    if (!(player.getPassengers().get(0) instanceof Player)) {
-      return;
-    }
-
-    Player toDrop = (Player) player.getPassengers().get(0);
-    PersistentDataContainer dataContainer = toDrop.getPersistentDataContainer();
-
-    if (dataContainer.get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) != 3) {
-      return;
-    }
-
-    DropPlayer.drop(toDrop, player);
-  }
 }

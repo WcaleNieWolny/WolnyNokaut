@@ -10,7 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class GetLastestTag {
-    public static String OpenCon(){
+    public static String OpenCon() {
         try {
             URL url = new URL("https://api.github.com/repos/WcaleNieWolny/TobiaszNokaut/releases/latest");
             try {
@@ -19,11 +19,11 @@ public class GetLastestTag {
                 connection.setConnectTimeout(10000);
                 connection.setReadTimeout(10000);
                 int status = connection.getResponseCode();
-                if(status == 200){
+                if (status == 200) {
                     StringBuffer stringBuffer = new StringBuffer();
                     String line;
                     java.io.BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                    while ((line = reader.readLine()) != null){
+                    while ((line = reader.readLine()) != null) {
                         stringBuffer.append(line);
                     }
                     reader.close();
@@ -32,7 +32,7 @@ public class GetLastestTag {
                     JsonNode node = Json.prase(JsonToPrase);
                     return node.get("tag_name").asText();
 
-                }else {
+                } else {
                     return null;
                 }
             } catch (IOException e) {

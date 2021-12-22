@@ -12,13 +12,15 @@ import pl.wolny.junglenokaut.JungleNokaut;
 
 public class AdminJoinEvent implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
-    public void event(PlayerJoinEvent event){
-        if(!(event.getPlayer().hasPermission("tobiasznokaut.updateinfo"))){
+    public void event(PlayerJoinEvent event) {
+        if (!(event.getPlayer().hasPermission("tobiasznokaut.updateinfo"))) {
             return;
         }
         String con = GetLastestTag.OpenCon();
-        if (con == null){return;}
-        if(con.equals(JungleNokaut.getMain().getDescription().getVersion())){
+        if (con == null) {
+            return;
+        }
+        if (con.equals(JungleNokaut.getMain().getDescription().getVersion())) {
             return;
         }
         Player player = event.getPlayer();
@@ -29,7 +31,8 @@ public class AdminJoinEvent implements Listener {
         message.setColor(ChatColor.RED);
         player.spigot().sendMessage(message);
     }
-    private String fixChat(String string){
+
+    private String fixChat(String string) {
         return string.replace("&", "§");
     }
 }

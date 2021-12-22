@@ -9,13 +9,14 @@ import java.io.IOException;
 public class Json {
     private static ObjectMapper objectMapper = getDefaultObjectMapper();
 
-    public static ObjectMapper getDefaultObjectMapper(){
+    public static ObjectMapper getDefaultObjectMapper() {
         ObjectMapper defaultObjectMapper = new ObjectMapper();
         defaultObjectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
         return defaultObjectMapper;
     }
+
     public static JsonNode prase(String src) throws IOException {
-        return  objectMapper.readTree(src);
+        return objectMapper.readTree(src);
     }
     //Source: https://www.youtube.com/watch?v=Hv_a3ZBSO_g
 }

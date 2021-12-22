@@ -24,17 +24,23 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
+
 public final class JungleNokaut extends JavaPlugin implements Listener {
     public static YamlConfiguration configData;
     public static Plugin plugin;
-    public static Plugin getMain(){
+
+    public static Plugin getMain() {
         return plugin;
     }
-    public static YamlConfiguration getConfigData(){return configData;}
+
+    public static YamlConfiguration getConfigData() {
+        return configData;
+    }
+
     @Override
     public void onEnable() {
         // Plugin startup logic
-        if(!(isPaper())){
+        if (!(isPaper())) {
             Bukkit.getLogger().info("Nie wykryto papera'a na serwerze!");
             Bukkit.getLogger().info("Proszę go zainstalować przed użyciem pluginu");
             Bukkit.getLogger().info("Pobierzesz go tutaj: https://papermc.io/downloads");
@@ -54,7 +60,7 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         // Plugin shutdown logic
         List<Player> list = new ArrayList<>(Bukkit.getOnlinePlayers());
         list.removeIf(ent -> ent.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0);
-        for (Player p: list) {
+        for (Player p : list) {
             p.setGameMode(GameMode.SURVIVAL);
             p.setWalkSpeed(0.2f);
             p.setHealth(0);
@@ -64,17 +70,17 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         }
     }
 
-    private boolean isPaper(){
+    private boolean isPaper() {
         boolean isPapermc = false;
         try {
             isPapermc = Class.forName("com.destroystokyo.paper.VersionHistoryManager$VersionData") != null;
         } catch (ClassNotFoundException e) {
         }
-        return  isPapermc;
+        return isPapermc;
         //Source: https://papermc.io/forums/t/checking-for-server-type-paper-spigot-or-bukkit/981
     }
 
-    private void registerEvents(){
+    private void registerEvents() {
         Bukkit.getPluginManager().registerEvents(new PlayerJoinListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerQuitListener2(), this);
@@ -90,25 +96,26 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         Bukkit.getPluginManager().registerEvents(new PlayerViolationListener(), this);
     }
 
-    private void registerCommands(){
+    private void registerCommands() {
         getCommand("zginodrazu").setExecutor(new AkceptujSmierc());
         getCommand("podniesgracza").setExecutor(new PodniesGracza());
         getCommand("rzucgracza").setExecutor(new RzucGracza());
     }
-    public void checkConfig(){
+
+    public void checkConfig() {
         Logger logger = Bukkit.getLogger();
         logger.info(">>> " + this.getDescription().getName() + " <<<");
         logger.info("Initializing the configuration file");
         logger.info("Performing tests");
         ConfigFile config = new ConfigFile(this);
-        if(!(config.getFile().exists())) {
+        if (!(config.getFile().exists())) {
             genConfig(config);
             logger.info("Test 1 failed!");
             return;
         }
-        if(!(config.check(new String[]{"NocCooldown", "HealCooldown", "HealXP", "PickupModule", "DisableCMD", "NoPlayerToDrop", "KnockedLine1",
+        if (!(config.check(new String[]{"NocCooldown", "HealCooldown", "HealXP", "PickupModule", "DisableCMD", "NoPlayerToDrop", "KnockedLine1",
                 "KnockedLine2", "ResuscitationForDeadLine1", "ResuscitationForDeadLine2", "ResuscitationForHeal",
-                "AcceptDeathNo", "AcceptDeathYes", "CanNotDoThat", "CanNotPickupYourSelf", "PickupSuckess", "PickupForUser", "SuckessDrop"}))){
+                "AcceptDeathNo", "AcceptDeathYes", "CanNotDoThat", "CanNotPickupYourSelf", "PickupSuckess", "PickupForUser", "SuckessDrop"}))) {
             config.getFile().delete();
             genConfig(config);
             logger.info("Test 2 failed!");
@@ -118,7 +125,8 @@ public final class JungleNokaut extends JavaPlugin implements Listener {
         logger.info(">>> " + this.getDescription().getName() + " <<<");
         configData = config.getYamlConfig();
     }
-    public void genConfig(ConfigFile config){
+
+    public void genConfig(ConfigFile config) {
         YamlConfiguration yamlConfiguration = config.getYamlConfig();
         yamlConfiguration.set("NocCooldown", 60);
         yamlConfiguration.set("HealCooldown", 10);

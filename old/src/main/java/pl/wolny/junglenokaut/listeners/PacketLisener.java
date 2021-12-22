@@ -15,14 +15,15 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class PacketLisener implements Listener {
     @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event){
+    public void onPlayerJoin(PlayerJoinEvent event) {
         injectPlayer(event.getPlayer());
     }
 
     @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent event){
+    public void onPlayerQuit(PlayerQuitEvent event) {
         removePlayer(event.getPlayer());
     }
+
     private void removePlayer(Player player) {
         Channel channel = ((CraftPlayer) player).getHandle().playerConnection.networkManager.channel;
         channel.eventLoop().submit(() -> {
@@ -38,11 +39,11 @@ public class PacketLisener implements Listener {
             public void channelRead(ChannelHandlerContext channelHandlerContext, Object packet) throws Exception {
                 //Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "PACKET READ: " + ChatColor.RED + packet.toString());
                 super.channelRead(channelHandlerContext, packet);
-                if(packet instanceof PacketPlayInUseEntity){
+                if (packet instanceof PacketPlayInUseEntity) {
                     PacketPlayInUseEntity BlockedPacket = (PacketPlayInUseEntity) packet;
                     Entity entity = BlockedPacket.a(((CraftWorld) player.getWorld()).getHandle());
-                    if(entity != null){
-                        if(entity.getId() == ((CraftPlayer) player).getHandle().getId()){
+                    if (entity != null) {
+                        if (entity.getId() == ((CraftPlayer) player).getHandle().getId()) {
                             //Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "PACKET BLOCKED: " + ChatColor.GREEN + BlockedPacket.toString());
                             return;
                         }

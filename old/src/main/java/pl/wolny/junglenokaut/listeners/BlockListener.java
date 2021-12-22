@@ -22,92 +22,92 @@ import java.util.Set;
 
 public class BlockListener implements Listener {
 
-  private static final Set<String> commands = ImmutableSet.of("/akceptujsmierc", "/harakiri", "/zginodrazu");
+    private static final Set<String> commands = ImmutableSet.of("/akceptujsmierc", "/harakiri", "/zginodrazu");
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerDropItem(PlayerDropItemEvent event) {
-    if (!checkPersistentDataContainer(event.getPlayer())) {
-      return;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+        if (!checkPersistentDataContainer(event.getPlayer())) {
+            return;
+        }
+
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
     }
 
-    event.setCancelled(true);
-    event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-  }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        Entity damager = event.getDamager();
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-    Entity damager = event.getDamager();
+        if (!(damager instanceof Player)) {
+            return;
+        }
 
-    if (!(damager instanceof Player)) {
-      return;
+        if (!checkPersistentDataContainer(damager)) {
+            return;
+        }
+
+        event.setCancelled(true);
+        damager.sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
     }
 
-    if (!checkPersistentDataContainer(damager)) {
-      return;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+        if (checkPersistentDataContainer(event.getPlayer())) {
+            return;
+        }
+
+        if (commands.contains(event.getMessage())) {
+            return;
+        }
+
+        event.setCancelled(true);
+        event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
     }
 
-    event.setCancelled(true);
-    damager.sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-  }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        if (checkPersistentDataContainer(event.getPlayer())) {
+            return;
+        }
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
-    if (checkPersistentDataContainer(event.getPlayer())) {
-      return;
+        //event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
+        event.setCancelled(true);
     }
 
-    if (commands.contains(event.getMessage())) {
-      return;
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockBreak(BlockBreakEvent event) {
+        if (checkPersistentDataContainer(event.getPlayer())) {
+            return;
+        }
+
+        event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
+        event.setCancelled(true);
     }
 
-    event.setCancelled(true);
-    event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-  }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onBlockPlace(BlockPlaceEvent event) {
+        if (checkPersistentDataContainer(event.getPlayer())) {
+            return;
+        }
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onPlayerInteract(PlayerInteractEvent event) {
-    if (checkPersistentDataContainer(event.getPlayer())) {
-      return;
+        event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
+        event.setCancelled(true);
     }
 
-    //event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-    event.setCancelled(true);
-  }
+    @EventHandler(priority = EventPriority.HIGH)
+    public void onEntityToggleSwim(EntityToggleSwimEvent event) {
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
 
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onBlockBreak(BlockBreakEvent event) {
-    if (checkPersistentDataContainer(event.getPlayer())) {
-      return;
+        if (checkPersistentDataContainer(event.getEntity())) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 
-    event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-    event.setCancelled(true);
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onBlockPlace(BlockPlaceEvent event) {
-    if (checkPersistentDataContainer(event.getPlayer())) {
-      return;
+    private boolean checkPersistentDataContainer(Entity player) {
+        return player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0;
     }
-
-    event.getPlayer().sendMessage(ChatColor.RED + "Hej! Nie możesz tego zrobić.");
-    event.setCancelled(true);
-  }
-
-  @EventHandler(priority = EventPriority.HIGH)
-  public void onEntityToggleSwim(EntityToggleSwimEvent event) {
-    if (!(event.getEntity() instanceof Player)) {
-      return;
-    }
-
-    if (checkPersistentDataContainer(event.getEntity())) {
-      return;
-    }
-
-    event.setCancelled(true);
-  }
-
-  private boolean checkPersistentDataContainer(Entity player) {
-    return player.getPersistentDataContainer().get(new NamespacedKey(JungleNokaut.getMain(), "NokStatus"), PersistentDataType.INTEGER) == 0;
-  }
 }
