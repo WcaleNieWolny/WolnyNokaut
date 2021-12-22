@@ -25,4 +25,12 @@ class NokautConfig {
     @Description("default message if something is not allowed")
     var notAllowed = "&cNie możesz tego zrobić!"
 
+    var noPlayerAsArgument = "&cNie podano gracza jako argument!"
+    var playerOffline = "&cTen gracz jest offline"
+    var playerToFar = "&cTen gracz jest za daleko!"
+    var playerNotKnocked = "&cTen gracz nie jest powalony!"
+    @Description("Placeholders: {PLAYER}")
+    var pickedSucessfull = "&aPodniosłem {PLAYER}!"
+    var noPlayerToDrop = "&cNie masz kogo zrzucić!"
+
 }

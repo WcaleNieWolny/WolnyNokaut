@@ -16,7 +16,7 @@ class LimboMetaDataAdapter(private val plugin: JavaPlugin, private val limboCont
     PacketType.Play.Server.ENTITY_METADATA) {
     override fun onPacketSending(event: PacketEvent?) {
         if (event != null) {
-            if (limboController.limboList.any { it.entityId == event.packet.integers.read(0) }) {
+            if (limboController.metaList.any { it.entityId == event.packet.integers.read(0) }) {
                 handleMetaData(event)
             }
         } else {

@@ -11,6 +11,7 @@ data class KnockedPlayer(val player: Player, val knockedBossbar: KnockedBossbar,
     var destroyed = false
     var isTreated = false
     var internalTimer = false
+    var driver: Player? = null
 }
 
 enum class KnockedState { GROUND, PLAYER_HEAD }

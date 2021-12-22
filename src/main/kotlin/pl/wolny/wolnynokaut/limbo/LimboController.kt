@@ -8,20 +8,24 @@ import com.comphenix.protocol.wrappers.EnumWrappers.EntityPose
 import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import com.comphenix.protocol.wrappers.WrappedDataWatcher.WrappedDataWatcherObject
 import org.bukkit.Bukkit
+import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import pl.wolny.wolnynokaut.limbo.adapters.LimboGeneralPacketControler
+import pl.wolny.wolnynokaut.limbo.adapters.LimboGeneralPacketController
 import pl.wolny.wolnynokaut.limbo.adapters.LimboMetaDataAdapter
 import pl.wolny.wolnynokaut.limbo.adapters.LimboSetSlotServerAdapter
 
 import pl.wolny.wolnynokaut.map.MapFactory
+import pl.wolny.wolnynokaut.utils.sendFakeGameMode
 
 
 class LimboController(private val plugin: JavaPlugin, private val mapFactory: MapFactory) {
     val limboList = mutableListOf<Player>()
     val slotMap = mutableMapOf<Player, Int>()
-    private val generalController = LimboGeneralPacketControler(plugin, this, slotMap, mapFactory)
+    val positionList = mutableListOf<Player>()
+    val metaList = mutableListOf<Player>()
+    private val generalController = LimboGeneralPacketController(plugin, this, slotMap, mapFactory)
     fun init() {
         val protocolManager = ProtocolLibrary.getProtocolManager()
         protocolManager.addPacketListener(generalController)
@@ -36,6 +40,8 @@ class LimboController(private val plugin: JavaPlugin, private val mapFactory: Ma
         mapFactory.generateMap(player)
         player.updateInventory()
         limboList.add(player)
+        positionList.add(player)
+        metaList.add(player)
         slotMap[player] = 0
         generalController.sendSlotPacket(player, 4)
         player.inventory.clear()
@@ -60,11 +66,14 @@ class LimboController(private val plugin: JavaPlugin, private val mapFactory: Ma
     fun removeFromLimbo(player: Player) {
         limboList.remove(player)
         slotMap.remove(player)
+        positionList.remove(player)
+        metaList.remove(player)
         player.updateInventory()
     }
 
     fun updatePlayerSlot(player: Player, int: Int) {
         slotMap[player] = int
+        generalController.sendSlotPacket(player, int)
     }
 
     fun removePlayerSlotLimitation(player: Player) {
@@ -81,5 +90,18 @@ class LimboController(private val plugin: JavaPlugin, private val mapFactory: Ma
         entityMetadataPacket.watchableCollectionModifier.write(0, wrappedWatchableObjects.watchableObjects)
         Bukkit.getOnlinePlayers().filter { player1 -> player1 != player }
             .forEach { player2 -> ProtocolLibrary.getProtocolManager().sendServerPacket(player2, entityMetadataPacket) }
+    }
+
+    fun forceGround(player: Player) {
+        val entityMetadataPacket = PacketContainer(PacketType.Play.Server.ENTITY_METADATA)
+        entityMetadataPacket.integers.write(0, player.entityId)
+        val pose = EnumWrappers.EntityPose.SWIMMING
+        val serializer = WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass())
+        val wrappedWatchableObjects = WrappedDataWatcher()
+        wrappedWatchableObjects.setObject(WrappedDataWatcher.WrappedDataWatcherObject(6, serializer), pose.toNms())
+        entityMetadataPacket.watchableCollectionModifier.write(0, wrappedWatchableObjects.watchableObjects)
+        Bukkit.getOnlinePlayers().filter { player1 -> player1 != player.player }
+            .forEach { player2 -> ProtocolLibrary.getProtocolManager().sendServerPacket(player2, entityMetadataPacket) }
+        player.sendFakeGameMode(GameMode.ADVENTURE)
     }
 }

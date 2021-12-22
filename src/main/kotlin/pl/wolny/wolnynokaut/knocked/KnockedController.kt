@@ -45,16 +45,7 @@ class KnockedController(
     fun putOnGround(knockedPlayer: KnockedPlayer) {
         knockedPlayer.player.sendFakeEffect(15, true)
         limboController.setInLimbo(knockedPlayer.player)
-        val entityMetadataPacket = PacketContainer(PacketType.Play.Server.ENTITY_METADATA)
-        entityMetadataPacket.integers.write(0, knockedPlayer.player.entityId)
-        val pose = EnumWrappers.EntityPose.SWIMMING
-        val serializer = WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass())
-        val wrappedWatchableObjects = WrappedDataWatcher()
-        wrappedWatchableObjects.setObject(WrappedDataWatcher.WrappedDataWatcherObject(6, serializer), pose.toNms())
-        entityMetadataPacket.watchableCollectionModifier.write(0, wrappedWatchableObjects.watchableObjects)
-        Bukkit.getOnlinePlayers().filter { player1 -> player1 != knockedPlayer.player }
-            .forEach { player2 -> ProtocolLibrary.getProtocolManager().sendServerPacket(player2, entityMetadataPacket) }
-        knockedPlayer.player.sendFakeGameMode(GameMode.ADVENTURE)
+        limboController.forceGround(knockedPlayer.player)
         startInternalTimers(knockedPlayer)
     }
 

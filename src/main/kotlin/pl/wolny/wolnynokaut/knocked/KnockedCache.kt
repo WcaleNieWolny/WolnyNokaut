@@ -18,4 +18,7 @@ class KnockedCache: Listener {
 
     val knockedPlayers = mutableMapOf<UUID, KnockedPlayer>()
 
+    fun getPlayersWithDriver(player: Player): List<KnockedPlayer>{
+        return knockedPlayers.filterValues { knockedPlayer -> knockedPlayer.driver == player }.toList().map { pair -> pair.second }
+    }
 }

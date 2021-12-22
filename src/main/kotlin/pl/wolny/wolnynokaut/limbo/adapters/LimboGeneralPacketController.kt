@@ -16,48 +16,58 @@ import org.bukkit.plugin.java.JavaPlugin
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.map.MapFactory
 
-class LimboGeneralPacketControler(private val plugin: JavaPlugin, private val limboController: LimboController, private val slotMap: MutableMap<Player, Int>, private val mapFactory: MapFactory) : PacketAdapter(
+class LimboGeneralPacketController(private val plugin: JavaPlugin, private val limboController: LimboController, private val slotMap: MutableMap<Player, Int>, private val mapFactory: MapFactory) : PacketAdapter(
     plugin,
-    ListenerPriority.HIGHEST,
+    ListenerPriority.NORMAL,
     PacketType.values().filter { a -> a.isClient }) {
     override fun onPacketReceiving(event: PacketEvent?) {
         if (event != null) {
             if (limboController.limboList.contains(event.player)) {
-                event.isCancelled = handle(event)
+                handle(event)
             }
         }
     }
-    fun handle(event: PacketEvent): Boolean {
+    fun handle(event: PacketEvent) {
+        val player = event.player
         when (event.packet.type) {
             PacketType.Play.Client.KEEP_ALIVE -> {
-                return false
+                event.isCancelled = false
+                return
             }
             PacketType.Play.Client.WINDOW_CLICK -> {
-                handleSlotClick(event.player)
+                handleSlotClick(player)
+                event.isCancelled = true
             }
-            PacketType.Play.Client.CHAT -> return false
+            PacketType.Play.Client.CHAT -> {
+                event.isCancelled = false
+                return
+            }
             PacketType.Play.Client.POSITION -> {
-                //                                val packet = PacketContainer(PacketType.Play.Server.ENTITY_TELEPORT)
-                //                                packet.integers.write(0, player.entityId)
-                //                                packet.doubles.write(0, player.location.x)
-                //                                packet.doubles.write(1, player.location.y)
-                //                                packet.doubles.write(2, player.location.z)
-                //                                packet.bytes.write(0, (player.location.yaw * 256.0F / 360.0F).toInt().toByte())
-                //                                packet.bytes.write(1, (player.location.pitch * 256.0F / 360.0F).toInt().toByte())
-                sendPositionPacket(event.player)
+                if(limboController.positionList.contains(player)){
+                    val y = event.packet.doubles.read(1)
+                    if(player.location.y > y){
+                        player.location.y = y
+                        event.isCancelled = false
+                        return
+                    }
+                    sendPositionPacket(player)
+                }
             }
             PacketType.Play.Client.LOOK -> {
-                sendPositionPacket(event.player)
+                if(limboController.positionList.contains(player)){
+                    sendPositionPacket(player)
+                }
             }
             PacketType.Play.Client.HELD_ITEM_SLOT -> {
-                if (slotMap.contains(event.player))
-                    sendSlotPacket(event.player, slotMap[event.player]!!)
+                if (slotMap.contains(player)){
+                    sendSlotPacket(player, slotMap[event.player]!!)
+                }
             }
             PacketType.Play.Client.BLOCK_DIG -> {
                 handleDigEvent(event)
             }
         }
-        return true
+        event.isCancelled = false
     }
     private fun sendPositionPacket(player: Player) {
         val packet = PacketContainer(PacketType.Play.Server.POSITION)

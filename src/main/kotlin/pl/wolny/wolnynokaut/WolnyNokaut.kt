@@ -5,8 +5,9 @@ import net.dzikoysk.cdn.loadAs
 import net.dzikoysk.cdn.source.Source
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import pl.wolny.wolnynokaut.commands.DropPlayerCommand
 import pl.wolny.wolnynokaut.commands.HarakiriCommand
-import pl.wolny.wolnynokaut.controlers.InventoryController
+import pl.wolny.wolnynokaut.commands.PickUpCommand
 import pl.wolny.wolnynokaut.controlers.RescueController
 import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.knocked.KnockedController
@@ -14,6 +15,7 @@ import pl.wolny.wolnynokaut.knocked.KnockedFactory
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.map.MapDataFile
 import pl.wolny.wolnynokaut.map.MapFactory
+import pl.wolny.wolnynokaut.transfer.TransferController
 import java.io.File
 
 
@@ -25,7 +27,7 @@ class WolnyNokaut : JavaPlugin() {
     private lateinit var config: NokautConfig
     private lateinit var knockedController: KnockedController
     private lateinit var rescueController: RescueController
-    private lateinit var inventoryController: InventoryController
+    private lateinit var transferController: TransferController
     override fun onEnable() {
         // Plugin startup logic
         val file = File(this.dataFolder, "map_data.cdn")
@@ -59,9 +61,11 @@ class WolnyNokaut : JavaPlugin() {
         rescueController = RescueController(
             knockedController, config.healXP, config.resuscitationForHeal1,
             config.resuscitationForHeal2, config.treatmentTime, this, knockedCache)
-        inventoryController = InventoryController(cache = knockedCache)
+        transferController = TransferController(limboController, knockedCache, knockedController)
         registerListeners()
         getCommand("harakiri")?.setExecutor(HarakiriCommand(knockedCache, knockedController, config.notAllowed, config.harakiriDisallow, config.harakiriPermit))
+        getCommand("pickup")?.setExecutor(PickUpCommand(transferController, knockedCache, config.notAllowed, config.noPlayerAsArgument, config.playerOffline, config.playerToFar, config.playerNotKnocked, config.pickedSucessfull))
+        getCommand("ground")?.setExecutor(DropPlayerCommand(transferController, knockedCache, config.notAllowed, config.noPlayerToDrop))
     }
 
     override fun onDisable() {
@@ -70,7 +74,6 @@ class WolnyNokaut : JavaPlugin() {
 
     fun registerListeners() {
         val manager = Bukkit.getPluginManager()
-        manager.registerEvents(inventoryController, this)
         manager.registerEvents(rescueController, this)
         manager.registerEvents(knockedController, this)
     }

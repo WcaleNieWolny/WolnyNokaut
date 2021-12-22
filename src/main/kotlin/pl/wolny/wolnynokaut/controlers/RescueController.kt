@@ -10,6 +10,7 @@ import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
@@ -36,6 +37,9 @@ class RescueController(private val knockedController: KnockedController,
             return
         }
         if (medic.totalExperience < healXP) {
+            return
+        }
+        if(knockedPlayer.driver != null){
             return
         }
         knockedController.stopInternalTimers(false, knockedPlayer)

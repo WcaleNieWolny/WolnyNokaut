@@ -11,3 +11,11 @@ commands:
     aliases:
       - zginodrazu
       - akceptujsmierc
+  pickup:
+    description: pickup player
+    aliases:
+      - podniesgracza
+  ground:
+    description: place player on the ground
+    aliases:
+      - rzucgracza
