@@ -24,7 +24,9 @@ class TransferController(private val limboController: LimboController, private v
             driver.sendLegacyMessage("You cannot move a player that is being healed!")
             return
         }
-        if(driver.passengers.contains(player)){throw IllegalStateException("KnockedPlayer ${player.name} is not working. Create issue on github.")}
+        if(driver.passengers.contains(player)){
+            throw IllegalStateException("KnockedPlayer ${player.name} is not working. Create issue on github.")
+        }
         knockedPlayer.state = KnockedState.PLAYER_HEAD
         knockedPlayer.driver = player
         limboController.positionList.remove(player)
@@ -37,8 +39,12 @@ class TransferController(private val limboController: LimboController, private v
     @Throws(java.lang.IllegalStateException::class)
     fun placeOnGround(knockedPlayer: KnockedPlayer){
         val player = knockedPlayer.player
-        if(knockedPlayer.state == KnockedState.GROUND){throw IllegalStateException("KnockedPlayer ${player.name} is grounded")}
-        if(knockedPlayer.driver == null){throw IllegalStateException("KnockedPlayer ${player.name} is not working. Create issue on github.")}
+        if(knockedPlayer.state == KnockedState.GROUND){
+            throw IllegalStateException("KnockedPlayer ${player.name} is grounded")
+        }
+        if(knockedPlayer.driver == null){
+            throw IllegalStateException("KnockedPlayer ${player.name} is not working. Create issue on github.")
+        }
         knockedPlayer.driver?.removePassenger(player)
         knockedPlayer.state = KnockedState.GROUND
         knockedPlayer.driver = null
