@@ -72,11 +72,11 @@ class LimboGeneralPacketController(private val plugin: JavaPlugin, private val l
     private fun sendPositionPacket(player: Player) {
         val packet = PacketContainer(PacketType.Play.Server.POSITION)
         packet.modifier.writeDefaults()
-        packet.doubles.write(0, player.location.x);
-        packet.doubles.write(1, player.location.y);
-        packet.doubles.write(2, player.location.z);
-        packet.float.write(0, 0F);
-        packet.float.write(1, 90F);
+        packet.doubles.write(0, player.location.x)
+        packet.doubles.write(1, player.location.y)
+        packet.doubles.write(2, player.location.z)
+        packet.float.write(0, 0F)
+        packet.float.write(1, 90F)
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
     }
 

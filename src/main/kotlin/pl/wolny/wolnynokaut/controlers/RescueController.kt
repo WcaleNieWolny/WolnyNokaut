@@ -77,12 +77,12 @@ class RescueController(private val knockedController: KnockedController,
                     )
                 )
                 time -= 0.25
-                medic.giveExp(-healXP);
+                medic.giveExp(-healXP)
                 if (i1 == resuscitationForHeal1.size - 1) {
-                    i1 = -1;
+                    i1 = -1
                 }
                 if (i2 == resuscitationForHeal1.size - 1) {
-                    i2 = -1;
+                    i2 = -1
                 }
                 if (time == 0.00) {
                     this.cancel()
