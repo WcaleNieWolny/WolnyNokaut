@@ -13,6 +13,7 @@ class CustomMapRender(private val inputStream: InputStream) : MapRenderer() {
         if (inputStream == null) {
             return
         }
-        canvas.drawImage(0, 0, ImageUtils.loadImage(inputStream))
+        val image = ImageUtils.loadImage(inputStream) ?: return
+        canvas.drawImage(0, 0, image)
     }
 }

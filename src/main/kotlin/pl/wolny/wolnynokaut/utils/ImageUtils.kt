@@ -11,7 +11,7 @@ object ImageUtils {
             ?: throw IllegalArgumentException("file not found! $fileName")
     }
 
-    fun loadImage(inputStream: InputStream): BufferedImage {
+    fun loadImage(inputStream: InputStream?): BufferedImage? {
         return ImageIO.read(inputStream)
     }
 }
