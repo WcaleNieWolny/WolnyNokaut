@@ -1,7 +1,7 @@
 name: WolnyNokaut
 version: '${project.version}'
 main: pl.wolny.wolnynokaut.WolnyNokaut
-api-version: 1.18
+api-version: 1.17
 authors: [ WcaleNieWolny ]
 description: Knockaut - implementation without any packet bs
 depend: [ ProtocolLib ]
