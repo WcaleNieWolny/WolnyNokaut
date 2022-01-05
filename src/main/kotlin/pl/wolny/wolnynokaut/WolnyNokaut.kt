@@ -17,6 +17,7 @@ import pl.wolny.wolnynokaut.map.MapDataFile
 import pl.wolny.wolnynokaut.map.MapFactory
 import pl.wolny.wolnynokaut.transfer.TransferController
 import java.io.File
+import java.util.logging.Level
 
 
 class WolnyNokaut : JavaPlugin() {
@@ -32,6 +33,7 @@ class WolnyNokaut : JavaPlugin() {
         // Plugin startup logic
         val file = File(this.dataFolder, "map_data.cdn")
         val cdn = KCdnFactory.createYamlLike()
+        checkDataFolder()
         val mapSource = Source.of(file)
         val mapDataFileResult = cdn.loadAs<MapDataFile>(mapSource)
         if (mapDataFileResult.isErr) {
@@ -76,5 +78,21 @@ class WolnyNokaut : JavaPlugin() {
         val manager = Bukkit.getPluginManager()
         manager.registerEvents(rescueController, this)
         manager.registerEvents(knockedController, this)
+    }
+    private fun checkDataFolder(){
+        val dataFile = this.dataFolder
+        try {
+            if (!dataFile.exists()) {
+                dataFile.mkdir()
+            }
+        } catch (exception: SecurityException) {
+            logger.log(
+                Level.SEVERE, """
+                Can not create plugin files! No permission! Shutting down!
+                Stack Trace: ${exception.printStackTrace()}
+            """.trimIndent()
+            )
+            Bukkit.getPluginManager().disablePlugin(this)
+        }
     }
 }
