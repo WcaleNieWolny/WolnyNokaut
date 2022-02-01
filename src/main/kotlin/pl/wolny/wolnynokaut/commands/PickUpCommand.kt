@@ -38,6 +38,10 @@ class PickUpCommand(
             sender.sendLegacyMessage(playerOffline)
             return true
         }
+        if(player == sender){
+            sender.sendMessage(ComponentUtils.format(notAllowed))
+            return true
+        }
         val knockedPlayer = cache[player]
         if(knockedPlayer == null){
             sender.sendLegacyMessage(playerNotKnocked)

@@ -65,6 +65,7 @@ class LimboGeneralPacketController(private val plugin: JavaPlugin, private val l
             }
             PacketType.Play.Client.BLOCK_DIG -> {
                 handleDigEvent(event)
+                event.isCancelled = true
             }
         }
         event.isCancelled = false
@@ -92,8 +93,8 @@ class LimboGeneralPacketController(private val plugin: JavaPlugin, private val l
         packet.itemModifier.write(0, ItemStack(Material.AIR, 1))
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
         val packet2 = PacketContainer(PacketType.Play.Server.SET_SLOT)
-        packet2.integers.write(0, -88)
-        packet2.integers.write(1, Int.MAX_VALUE)
+        packet2.integers.write(0, -88) //-2
+        packet2.integers.write(1, 36)
         packet2.itemModifier.write(0, mapFactory.generateMapItem(player))
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet2)
     }

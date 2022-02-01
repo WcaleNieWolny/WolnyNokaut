@@ -44,6 +44,7 @@ class KnockedController(
 
     fun putOnGround(knockedPlayer: KnockedPlayer) {
         knockedPlayer.player.sendFakeEffect(15, true)
+        knockedPlayer.player.sendFakeEffect(15, true)
         limboController.setInLimbo(knockedPlayer.player)
         limboController.forceGround(knockedPlayer.player)
         startInternalTimers(knockedPlayer)

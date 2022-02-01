@@ -19,12 +19,20 @@ class DropPlayerCommand(
             sender.sendMessage(ComponentUtils.format(notAllowed))
             return true
         }
-        val nearbyPlayers = cache.getPlayersWithDriver(sender)
-        if(nearbyPlayers.isEmpty()){
+        if(sender.passengers.isEmpty()){
             sender.sendMessage(ComponentUtils.format(noPlayerToDrop))
             return true
         }
-        val knockedPlayer = nearbyPlayers[0]
+        val passenger = sender.passengers[0]
+        if(passenger !is Player){
+            sender.sendMessage(ComponentUtils.format(noPlayerToDrop))
+            return true
+        }
+        val knockedPlayer = cache.knockedPlayers[passenger.uniqueId]
+        if(knockedPlayer == null){
+            sender.sendMessage(ComponentUtils.format(noPlayerToDrop))
+            return true
+        }
         transferController.placeOnGround(knockedPlayer)
         return true
     }

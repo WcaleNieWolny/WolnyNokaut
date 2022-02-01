@@ -12,6 +12,8 @@ Nowa generacja pluginu na nokaut. Plugin nie używa żadnych npc lub innych rzec
 
 ```
 /harakiri - akceptuje śmierć (gdy gracz jest powalony)
+/podniesgracza adam - Podnosi gracza o nicku adam
+/rzucgracza - Rzuca gracza
 ```
 
 ## Textura mapy
