@@ -53,10 +53,10 @@ class WolnyNokaut : JavaPlugin() {
         config = configResult.get()
         cdn.render(mapDataFile, Source.of(file))
         cdn.render(config, configSource)
-        mapFactory = MapFactory(mapDataFile.mapId, cdn, mapDataFile, file)
-        limboController = LimboController(this, mapFactory)
-        limboController.init()
         knockedCache = KnockedCache()
+        mapFactory = MapFactory(mapDataFile.mapId, cdn, mapDataFile, file)
+        limboController = LimboController(this, mapFactory, knockedCache)
+        limboController.init()
         knockedFactory = KnockedFactory(this, limboController, config, knockedCache)
         knockedCache.factory = knockedFactory
         knockedController = knockedFactory.createControler()

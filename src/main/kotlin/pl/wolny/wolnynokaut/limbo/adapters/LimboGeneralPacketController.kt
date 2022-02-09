@@ -13,10 +13,11 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.map.MapFactory
 
-class LimboGeneralPacketController(private val plugin: JavaPlugin, private val limboController: LimboController, private val slotMap: MutableMap<Player, Int>, private val mapFactory: MapFactory) : PacketAdapter(
+class LimboGeneralPacketController(plugin: JavaPlugin, private val limboController: LimboController, private val slotMap: MutableMap<Player, Int>, private val mapFactory: MapFactory, private val cache: KnockedCache) : PacketAdapter(
     plugin,
     ListenerPriority.NORMAL,
     PacketType.values().filter { a -> a.isClient }) {
@@ -37,6 +38,7 @@ class LimboGeneralPacketController(private val plugin: JavaPlugin, private val l
             PacketType.Play.Client.WINDOW_CLICK -> {
                 handleSlotClick(player)
                 event.isCancelled = true
+                return
             }
             PacketType.Play.Client.CHAT -> {
                 event.isCancelled = false
@@ -66,6 +68,14 @@ class LimboGeneralPacketController(private val plugin: JavaPlugin, private val l
             PacketType.Play.Client.BLOCK_DIG -> {
                 handleDigEvent(event)
                 event.isCancelled = true
+                return
+            }
+            PacketType.Play.Client.STEER_VEHICLE -> {
+                if(event.packet.booleans.read(1)){
+                    sendVehiclePacket(player)
+                }
+                event.isCancelled = true
+                return
             }
         }
         event.isCancelled = false
@@ -86,6 +96,16 @@ class LimboGeneralPacketController(private val plugin: JavaPlugin, private val l
         packet.integers.write(0, int)
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
     }
+
+    fun sendVehiclePacket(player: Player) {
+        val knockedPlayer = cache.knockedPlayers[player.uniqueId] ?: return
+        val driver = knockedPlayer.driver ?: return
+        val packet = PacketContainer(PacketType.Play.Server.MOUNT)
+        packet.integers.write(0, driver.entityId)
+        packet.integerArrays.write(0, intArrayOf(player.entityId))
+        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
+    }
+
     fun handleSlotClick(player: Player){
         val packet = PacketContainer(PacketType.Play.Server.SET_SLOT)
         packet.integers.write(0, -99)

@@ -21,4 +21,7 @@ class KnockedCache: Listener {
     fun getPlayersWithDriver(player: Player): List<KnockedPlayer>{
         return knockedPlayers.filterValues { knockedPlayer -> knockedPlayer.driver == player }.toList().map { pair -> pair.second }
     }
+    fun getPlayersWithDrivers(): List<KnockedPlayer>{
+        return knockedPlayers.filterValues { knockedPlayer -> knockedPlayer.driver != null }.toList().map { pair -> pair.second }
+    }
 }

@@ -12,6 +12,7 @@ import org.bukkit.GameMode
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
+import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.limbo.adapters.LimboGeneralPacketController
 import pl.wolny.wolnynokaut.limbo.adapters.LimboMetaDataAdapter
 import pl.wolny.wolnynokaut.limbo.adapters.LimboSetSlotServerAdapter
@@ -20,12 +21,12 @@ import pl.wolny.wolnynokaut.map.MapFactory
 import pl.wolny.wolnynokaut.utils.sendFakeGameMode
 
 
-class LimboController(private val plugin: JavaPlugin, private val mapFactory: MapFactory) {
+class LimboController(private val plugin: JavaPlugin, private val mapFactory: MapFactory, cache: KnockedCache) {
     val limboList = mutableListOf<Player>()
     val slotMap = mutableMapOf<Player, Int>()
     val positionList = mutableListOf<Player>()
     val metaList = mutableListOf<Player>()
-    private val generalController = LimboGeneralPacketController(plugin, this, slotMap, mapFactory)
+    private val generalController = LimboGeneralPacketController(plugin, this, slotMap, mapFactory, cache)
     fun init() {
         val protocolManager = ProtocolLibrary.getProtocolManager()
         protocolManager.addPacketListener(generalController)
