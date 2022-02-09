@@ -32,5 +32,8 @@ class NokautConfig {
     @Description("Placeholders: {PLAYER}")
     var pickedSucessfull = "&aPodniosłem {PLAYER}!"
     var noPlayerToDrop = "&cNie masz kogo zrzucić!"
-
+    @Description("Placeholders: {USER}")
+    var playerKillSubTitle = "&aPowalono gracza &f{USER}"
+    @Description("Defines if player kill subtitle shoudl be enabled")
+    var playerKillSubTitleEnabled = false
 }

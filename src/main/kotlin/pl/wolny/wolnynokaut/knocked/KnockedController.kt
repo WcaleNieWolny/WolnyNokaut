@@ -8,6 +8,7 @@ import com.comphenix.protocol.events.PacketEvent
 import com.comphenix.protocol.wrappers.EnumWrappers
 import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import net.kyori.adventure.title.Title
+import net.kyori.adventure.title.TitlePart
 import org.bukkit.Bukkit
 import org.bukkit.GameMode
 import org.bukkit.Location
@@ -16,6 +17,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerQuitEvent
@@ -32,6 +34,8 @@ class KnockedController(
     private val plugin: JavaPlugin,
     private val limboController: LimboController,
     private val cache: KnockedCache,
+    private val titleString: String,
+    private val playerKillSubTitleEnabled: Boolean
 ): Listener {
     private fun getTimeRunnable(knockedPlayer: KnockedPlayer): BukkitRunnable = object : BukkitRunnable() {
         override fun run() {
@@ -49,6 +53,7 @@ class KnockedController(
         limboController.forceGround(knockedPlayer.player)
         startInternalTimers(knockedPlayer)
     }
+
 
     fun killAndStop(knockedPlayer: KnockedPlayer) {
         val player = knockedPlayer.player
@@ -107,12 +112,34 @@ class KnockedController(
             killAndStop(knockedPlayer = cache[event.player.uniqueId]!!)
         }
     }
+
+    fun checkSubTitle(player: Player){
+        if(playerKillSubTitleEnabled){
+            return
+        }
+        var lastDamageCause = player.lastDamageCause
+        if (lastDamageCause != null) {
+            val cause = lastDamageCause.cause
+            if(cause == EntityDamageEvent.DamageCause.ENTITY_ATTACK){
+                lastDamageCause = lastDamageCause as EntityDamageByEntityEvent
+                val entity = lastDamageCause.damager
+                if(entity is Player){
+                    val title = Title.title(ComponentUtils.format(""), ComponentUtils.format(titleString.replace("{USER}", player.name)), Title.Times.of(Duration.ofSeconds(0), Duration.ofMillis(1500), Duration.ofSeconds(0)))
+                    entity.showTitle(title)
+                }
+            }
+        }
+    }
+
     @EventHandler(priority = EventPriority.HIGH)
     private fun onPlayerDeath(event: PlayerDeathEvent) {
         val player = event.player
         if (player.lastDamageCause!!.cause == EntityDamageEvent.DamageCause.VOID) {
             return
         }
+
+        checkSubTitle(player)
+
         val dataContainer = player.persistentDataContainer
         val namespacedKey = NamespacedKey(plugin, "die_on_event")
         val data = dataContainer.get(namespacedKey, PersistentDataType.BYTE)

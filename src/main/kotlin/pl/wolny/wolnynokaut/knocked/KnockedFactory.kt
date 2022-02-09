@@ -28,5 +28,7 @@ class KnockedFactory(
             plugin = plugin,
             limboController = limboController,
             cache = cache,
+            titleString = nokautConfig.playerKillSubTitle,
+            playerKillSubTitleEnabled = nokautConfig.playerKillSubTitleEnabled
         )
 }
