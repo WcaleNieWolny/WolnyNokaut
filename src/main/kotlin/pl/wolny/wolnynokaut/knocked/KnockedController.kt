@@ -24,6 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
+import org.spigotmc.event.entity.EntityDismountEvent
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.utils.*
 import java.time.Duration
@@ -72,6 +73,7 @@ class KnockedController(
     fun forceRecovery(knockedPlayer: KnockedPlayer) {
         val player = knockedPlayer.player
         cache.knockedPlayers.remove(player.uniqueId)
+        cache.lastPlayerKillers.remove(player.uniqueId)
         limboController.removeFromLimbo(player)
         limboController.removePlayerSlotLimitation(player)
         knockedPlayer.knockedBossbar.removeRender()
@@ -113,6 +115,17 @@ class KnockedController(
         }
     }
 
+    @EventHandler(priority = EventPriority.HIGH)
+    private fun onPlayerDismount(event: EntityDismountEvent){
+        if(event.entity !is Player){
+            return
+        }
+        val knockedPlayer = cache[event.entity.uniqueId] ?: return
+        if(knockedPlayer.driver != null){
+            event.isCancelled = true
+        }
+    }
+
     fun checkSubTitle(player: Player){
         if(playerKillSubTitleEnabled){
             return
@@ -134,11 +147,18 @@ class KnockedController(
     @EventHandler(priority = EventPriority.HIGH)
     private fun onPlayerDeath(event: PlayerDeathEvent) {
         val player = event.player
+
+        if(cache.lastPlayerKillers[event.player.uniqueId]  != null){
+            player.killer = cache.lastPlayerKillers[event.player.uniqueId]
+            cache.lastPlayerKillers[event.player.uniqueId] = null
+        }
+
         if (player.lastDamageCause!!.cause == EntityDamageEvent.DamageCause.VOID) {
             return
         }
-
         checkSubTitle(player)
+
+        cache.lastPlayerKillers[event.player.uniqueId] = player.killer
 
         val dataContainer = player.persistentDataContainer
         val namespacedKey = NamespacedKey(plugin, "die_on_event")

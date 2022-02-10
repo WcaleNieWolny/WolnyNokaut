@@ -26,7 +26,7 @@ class LimboController(private val plugin: JavaPlugin, private val mapFactory: Ma
     val slotMap = mutableMapOf<Player, Int>()
     val positionList = mutableListOf<Player>()
     val metaList = mutableListOf<Player>()
-    private val generalController = LimboGeneralPacketController(plugin, this, slotMap, mapFactory, cache)
+    private val generalController = LimboGeneralPacketController(plugin, this, slotMap, mapFactory)
     fun init() {
         val protocolManager = ProtocolLibrary.getProtocolManager()
         protocolManager.addPacketListener(generalController)

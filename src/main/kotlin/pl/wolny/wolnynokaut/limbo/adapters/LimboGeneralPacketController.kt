@@ -17,7 +17,12 @@ import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.map.MapFactory
 
-class LimboGeneralPacketController(plugin: JavaPlugin, private val limboController: LimboController, private val slotMap: MutableMap<Player, Int>, private val mapFactory: MapFactory, private val cache: KnockedCache) : PacketAdapter(
+class LimboGeneralPacketController(
+    plugin: JavaPlugin,
+    private val limboController: LimboController,
+    private val slotMap: MutableMap<Player, Int>,
+    private val mapFactory: MapFactory
+) : PacketAdapter(
     plugin,
     ListenerPriority.NORMAL,
     PacketType.values().filter { a -> a.isClient }) {
@@ -72,10 +77,8 @@ class LimboGeneralPacketController(plugin: JavaPlugin, private val limboControll
             }
             PacketType.Play.Client.STEER_VEHICLE -> {
                 if(event.packet.booleans.read(1)){
-                    sendVehiclePacket(player)
+                    return
                 }
-                event.isCancelled = true
-                return
             }
         }
         event.isCancelled = false
@@ -94,15 +97,6 @@ class LimboGeneralPacketController(plugin: JavaPlugin, private val limboControll
     fun sendSlotPacket(player: Player, int: Int) {
         val packet = PacketContainer(PacketType.Play.Server.HELD_ITEM_SLOT)
         packet.integers.write(0, int)
-        ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
-    }
-
-    fun sendVehiclePacket(player: Player) {
-        val knockedPlayer = cache.knockedPlayers[player.uniqueId] ?: return
-        val driver = knockedPlayer.driver ?: return
-        val packet = PacketContainer(PacketType.Play.Server.MOUNT)
-        packet.integers.write(0, driver.entityId)
-        packet.integerArrays.write(0, intArrayOf(player.entityId))
         ProtocolLibrary.getProtocolManager().sendServerPacket(player, packet)
     }
 

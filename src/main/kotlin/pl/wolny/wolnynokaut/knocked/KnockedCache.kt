@@ -4,6 +4,7 @@ import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.EventPriority
 import org.bukkit.event.Listener
+import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerQuitEvent
 import java.util.*
 
@@ -17,6 +18,7 @@ class KnockedCache: Listener {
     }
 
     val knockedPlayers = mutableMapOf<UUID, KnockedPlayer>()
+    val lastPlayerKillers = mutableMapOf<UUID, Player?>()
 
     fun getPlayersWithDriver(player: Player): List<KnockedPlayer>{
         return knockedPlayers.filterValues { knockedPlayer -> knockedPlayer.driver == player }.toList().map { pair -> pair.second }
