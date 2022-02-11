@@ -25,6 +25,7 @@ import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
 import org.spigotmc.event.entity.EntityDismountEvent
+import pl.wolny.wolnynokaut.hook.WorldGuardHook
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.utils.*
 import java.time.Duration
@@ -35,6 +36,7 @@ class KnockedController(
     private val plugin: JavaPlugin,
     private val limboController: LimboController,
     private val cache: KnockedCache,
+    private val worldGuardHook: WorldGuardHook,
     private val titleString: String,
     private val playerKillSubTitleEnabled: Boolean
 ): Listener {
@@ -156,6 +158,11 @@ class KnockedController(
         if (player.lastDamageCause!!.cause == EntityDamageEvent.DamageCause.VOID) {
             return
         }
+
+        if(!worldGuardHook.allowKnockout(player)){
+            return
+        }
+
         checkSubTitle(player)
 
         cache.lastPlayerKillers[event.player.uniqueId] = player.killer

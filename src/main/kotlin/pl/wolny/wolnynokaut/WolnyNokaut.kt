@@ -9,6 +9,7 @@ import pl.wolny.wolnynokaut.commands.DropPlayerCommand
 import pl.wolny.wolnynokaut.commands.HarakiriCommand
 import pl.wolny.wolnynokaut.commands.PickUpCommand
 import pl.wolny.wolnynokaut.controlers.RescueController
+import pl.wolny.wolnynokaut.hook.WorldGuardHook
 import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.knocked.KnockedController
 import pl.wolny.wolnynokaut.knocked.KnockedFactory
@@ -21,6 +22,7 @@ import java.util.logging.Level
 
 
 class WolnyNokaut : JavaPlugin() {
+    private val worldGuardHook = WorldGuardHook()
     private lateinit var limboController: LimboController
     private lateinit var mapFactory: MapFactory
     private lateinit var knockedFactory: KnockedFactory
@@ -53,11 +55,14 @@ class WolnyNokaut : JavaPlugin() {
         config = configResult.get()
         cdn.render(mapDataFile, Source.of(file))
         cdn.render(config, configSource)
+
+        worldGuardHook.init()
+
         knockedCache = KnockedCache()
         mapFactory = MapFactory(mapDataFile.mapId, cdn, mapDataFile, file)
         limboController = LimboController(this, mapFactory, knockedCache)
         limboController.init()
-        knockedFactory = KnockedFactory(this, limboController, config, knockedCache)
+        knockedFactory = KnockedFactory(this, limboController, config, worldGuardHook, knockedCache)
         knockedCache.factory = knockedFactory
         knockedController = knockedFactory.createControler()
         rescueController = RescueController(
