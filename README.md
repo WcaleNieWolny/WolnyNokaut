@@ -22,6 +22,15 @@ Na 90% textura emotki zawartej w pluginie nie jest objęta prawami autorskimi.
 
 Znalazłem ją w internecie. Było wiele kopi tej samej emotki.
 
-## Licencja
+## WorldGuard
 
+Plugin posada własną flagę w pluginie `WorldGuard`. Nazywa się ona `disable-nokaut`.
+
+## Textura mapy
+
+Na 90% textura emotki zawartej w pluginie nie jest objęta prawami autorskimi.
+
+Znalazłem ją w internecie. Było wiele kopi tej samej emotki.
+
+## Licencja
 [Eclipse Public License 2.0](https://www.eclipse.org/legal/epl-2.0/)
