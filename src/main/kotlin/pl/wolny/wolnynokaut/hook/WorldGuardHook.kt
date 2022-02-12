@@ -4,6 +4,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldedit.util.Location
 import com.sk89q.worldguard.WorldGuard
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin
+import com.sk89q.worldguard.protection.flags.Flag
 import com.sk89q.worldguard.protection.flags.StateFlag
 import com.sk89q.worldguard.protection.regions.RegionQuery
 import org.bukkit.Bukkit
@@ -53,7 +54,10 @@ class WorldGuardHook {
 
     private fun registerFlag(){
         val flag = StateFlag("disable-nokaut", false)
-        worldGuard?.flagRegistry?.register(flag)
+        val flagRegistry = worldGuard?.flagRegistry ?: return
+        val method = flagRegistry::class.java.getDeclaredMethod("forceRegister", Flag::class.java)
+        method.isAccessible = true
+        method.invoke(flagRegistry, flag)
         WorldGuardHook.flag = flag
     }
 }
