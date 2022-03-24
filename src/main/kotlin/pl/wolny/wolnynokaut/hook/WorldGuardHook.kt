@@ -36,6 +36,9 @@ class WorldGuardHook {
     }
 
     fun accessible(): Boolean{
+        if(plugin == null){
+            return false
+        }
         if(!plugin!!.isEnabled){
             return false
         }
