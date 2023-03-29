@@ -45,13 +45,18 @@ class TransferController(private val limboController: LimboController, private v
         if(knockedPlayer.driver == null){
             throw IllegalStateException("KnockedPlayer ${player.name} is not working. Create issue on github.")
         }
-        knockedPlayer.driver?.removePassenger(player)
+
         knockedPlayer.state = KnockedState.GROUND
+        knockedPlayer.driver!!.eject()
+        knockedPlayer.driver!!.removePassenger(player)
         knockedPlayer.driver = null
+
         limboController.metaList.add(player)
         limboController.positionList.add(player)
         limboController.updatePlayerSlot(player, 0)
         knockedController.startInternalTimers(knockedPlayer)
         limboController.forceGround(player)
+
+        //knockedPlayer.driver?.removePassenger(player)
     }
 }

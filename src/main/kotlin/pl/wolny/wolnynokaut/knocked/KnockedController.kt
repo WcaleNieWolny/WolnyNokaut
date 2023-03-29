@@ -21,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.PlayerDeathEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
 import org.bukkit.scheduler.BukkitRunnable
@@ -123,7 +124,15 @@ class KnockedController(
             return
         }
         val knockedPlayer = cache[event.entity.uniqueId] ?: return
-        if(knockedPlayer.driver != null){
+        if(knockedPlayer.state == KnockedState.PLAYER_HEAD){
+            event.isCancelled = true
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    private fun onPlayerSneek(event: PlayerToggleSneakEvent){
+        val knockedPlayer = cache[event.player.uniqueId] ?: return
+        if(knockedPlayer.state == KnockedState.GROUND){
             event.isCancelled = true
         }
     }
