@@ -155,7 +155,7 @@ class KnockedController(
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.LOW)
     private fun onPlayerDeath(event: PlayerDeathEvent) {
         val player = event.player
 
