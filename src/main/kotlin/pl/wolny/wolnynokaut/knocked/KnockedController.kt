@@ -1,17 +1,6 @@
 package pl.wolny.wolnynokaut.knocked
 
-import com.comphenix.protocol.PacketType
-import com.comphenix.protocol.ProtocolLibrary
-import com.comphenix.protocol.events.PacketAdapter
-import com.comphenix.protocol.events.PacketContainer
-import com.comphenix.protocol.events.PacketEvent
-import com.comphenix.protocol.wrappers.EnumWrappers
-import com.comphenix.protocol.wrappers.WrappedDataWatcher
 import net.kyori.adventure.title.Title
-import net.kyori.adventure.title.TitlePart
-import org.bukkit.Bukkit
-import org.bukkit.GameMode
-import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -24,14 +13,16 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.persistence.PersistentDataType
 import org.bukkit.plugin.java.JavaPlugin
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.scheduler.BukkitRunnable
 import org.spigotmc.event.entity.EntityDismountEvent
 import pl.wolny.wolnynokaut.hook.WorldGuardHook
 import pl.wolny.wolnynokaut.limbo.LimboController
-import pl.wolny.wolnynokaut.utils.*
+import pl.wolny.wolnynokaut.utils.ComponentUtils
+import pl.wolny.wolnynokaut.utils.removeFakeEffect
+import pl.wolny.wolnynokaut.utils.resetFakeGamemode
+import pl.wolny.wolnynokaut.utils.sendFakeEffect
 import java.time.Duration
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class KnockedController(
     private val plugin: JavaPlugin,
@@ -52,7 +43,8 @@ class KnockedController(
 
     fun putOnGround(knockedPlayer: KnockedPlayer) {
         knockedPlayer.player.sendFakeEffect(15, true)
-        knockedPlayer.player.sendFakeEffect(15, true)
+        knockedPlayer.player.sendFakeEffect(2,true)
+        knockedPlayer.player.sendFakeEffect(8,true)
         limboController.setInLimbo(knockedPlayer.player)
         limboController.forceGround(knockedPlayer.player)
         startInternalTimers(knockedPlayer)
@@ -80,7 +72,9 @@ class KnockedController(
         limboController.removeFromLimbo(player)
         limboController.removePlayerSlotLimitation(player)
         knockedPlayer.knockedBossbar.removeRender()
-        knockedPlayer.player.removeFakeEffect(12)
+        knockedPlayer.player.removeFakeEffect(PotionEffectType.SLOW)
+        knockedPlayer.player.removeFakeEffect(PotionEffectType.BLINDNESS)
+        knockedPlayer.player.removeFakeEffect(PotionEffectType.JUMP)
         stopInternalTimers(true, knockedPlayer)
         player.resetFakeGamemode()
         limboController.standUp(player)

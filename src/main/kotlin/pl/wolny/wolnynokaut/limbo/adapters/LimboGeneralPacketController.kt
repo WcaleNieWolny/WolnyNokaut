@@ -13,7 +13,6 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.java.JavaPlugin
-import pl.wolny.wolnynokaut.knocked.KnockedCache
 import pl.wolny.wolnynokaut.limbo.LimboController
 import pl.wolny.wolnynokaut.map.MapFactory
 
@@ -33,7 +32,7 @@ class LimboGeneralPacketController(
             }
         }
     }
-    fun handle(event: PacketEvent) {
+    private fun handle(event: PacketEvent) {
         val player = event.player
         when (event.packet.type) {
             PacketType.Play.Client.KEEP_ALIVE -> {
@@ -51,18 +50,22 @@ class LimboGeneralPacketController(
             }
             PacketType.Play.Client.POSITION -> {
                 if(limboController.positionList.contains(player)){
-                    val y = event.packet.doubles.read(1)
-                    if(player.location.y > y){
-                        player.location.y = y
-                        event.isCancelled = false
-                        return
+                    if(limboController.positionList.contains(player)){
+                        event.isCancelled = true
+                        handlePositionPacket(player, event.packet)
                     }
-                    sendPositionPacket(player)
                 }
             }
             PacketType.Play.Client.LOOK -> {
                 if(limboController.positionList.contains(player)){
-                    sendPositionPacket(player)
+                    event.isCancelled = true
+                    handlePositionPacket(player, event.packet)
+                }
+            }
+            PacketType.Play.Client.POSITION_LOOK -> {
+                if(limboController.positionList.contains(player)){
+                    event.isCancelled = true
+                    handlePositionPacket(player, event.packet)
                 }
             }
             PacketType.Play.Client.HELD_ITEM_SLOT -> {
@@ -83,8 +86,37 @@ class LimboGeneralPacketController(
         }
         event.isCancelled = false
     }
-    private fun sendPositionPacket(player: Player) {
+
+    private fun getCompressedAngle(value: Float): Float {
+        return (value * 256.0f / 360.0f)
+    }
+
+    private fun handlePositionPacket(player: Player, dataPacket: PacketContainer) {
         val packet = PacketContainer(PacketType.Play.Server.POSITION)
+        val location = player.location
+
+        when (dataPacket.type) {
+            PacketType.Play.Client.POSITION, PacketType.Play.Client.POSITION_LOOK -> {
+                val x = dataPacket.doubles.read(0)
+                val y = dataPacket.doubles.read(1)
+                val z = dataPacket.doubles.read(2)
+
+
+                if (x == location.x && y == location.y && z == location.z) {
+                    println("nah")
+                    return
+                }
+            }
+            PacketType.Play.Client.POSITION_LOOK, PacketType.Play.Client.LOOK -> {
+                val yaw = dataPacket.float.read(0)
+                val pitch = dataPacket.float.read(1)
+
+                if (pitch == location.pitch && yaw == location.yaw) {
+                    return
+                }
+            }
+        }
+
         packet.modifier.writeDefaults()
         packet.doubles.write(0, player.location.x)
         packet.doubles.write(1, player.location.y)

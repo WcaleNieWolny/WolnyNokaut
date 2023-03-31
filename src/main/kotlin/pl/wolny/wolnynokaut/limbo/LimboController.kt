@@ -96,10 +96,10 @@ class LimboController(private val plugin: JavaPlugin, private val mapFactory: Ma
     fun forceGround(player: Player) {
         val entityMetadataPacket = PacketContainer(PacketType.Play.Server.ENTITY_METADATA)
         entityMetadataPacket.integers.write(0, player.entityId)
-        val pose = EnumWrappers.EntityPose.SWIMMING
+        val pose = EntityPose.SWIMMING
         val serializer = WrappedDataWatcher.Registry.get(EnumWrappers.getEntityPoseClass())
         val wrappedWatchableObjects = WrappedDataWatcher()
-        wrappedWatchableObjects.setObject(WrappedDataWatcher.WrappedDataWatcherObject(6, serializer), pose.toNms())
+        wrappedWatchableObjects.setObject(WrappedDataWatcherObject(6, serializer), pose.toNms())
         entityMetadataPacket.watchableCollectionModifier.write(0, wrappedWatchableObjects.watchableObjects)
         Bukkit.getOnlinePlayers().filter { player1 -> player1 != player.player }
             .forEach { player2 -> ProtocolLibrary.getProtocolManager().sendServerPacket(player2, entityMetadataPacket) }
