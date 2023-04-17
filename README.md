@@ -1,6 +1,12 @@
 # WolnyNokaut
 
-Nowa generacja pluginu na nokaut. Plugin nie używa żadnych npc lub innych rzeczy tego typu.
+## SPIGOT MC
+
+Please note that I am not affiliated with the [spigot mc](https://www.spigotmc.org/resources/wolnynokaut.109323/) page. It contains a lot of [false informations](https://github.com/WcaleNieWolny/WolnyNokaut/issues/12)
+
+## Co to za plugn?
+
+Jest to nowa generacja pluginu na nokaut. Plugin nie używa żadnych npc lub innych rzeczy tego typu.
 
 ## Wymagania
 
